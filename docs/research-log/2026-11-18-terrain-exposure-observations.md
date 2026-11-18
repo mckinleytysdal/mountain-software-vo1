@@ -51,3 +51,25 @@ Sentinel-2 imagery of scoured versus loaded slopes after a wind event.
 - Median rank correlation between B0 and M1 across days: 0.32. M1 is no
   longer a restatement of aspect, but whether it is BETTER is still untested:
   there are no wind-effect labels yet.
+
+## Sensitivity of M1 (three event days: 2026-09-30, 11-09, 11-12)
+
+Rank correlation of route-point M1 ranks against the default (blend wind,
+Sx 300 m, threshold 25 km/h, exponent 4), and how many of the default's
+top-10 points stay in the top 10:
+
+| Change | Rank r | Top-10 kept |
+|---|---|---|
+| Sx search 100 m | 1.00, 1.00, 1.00 | 8, 9, 9 |
+| Threshold 20 km/h | 0.86, 0.96, 0.96 | 9, 10, 10 |
+| Threshold 30 km/h | 0.97, 0.95, 0.95 | 10, 10, 10 |
+| Exponent 3 | 1.00, 1.00, 1.00 | 9, 10, 10 |
+| Wind 700 hPa only | 0.32, 0.23, 0.35 | 3, 2, 3 |
+| Wind hybrid (700 hPa speed, 10 m direction) | 0.27, 0.23, 0.18 | 4, 3, 4 |
+
+(Sx at 100 m and 300 m differ per point and direction, r 0.97 with 7 % of
+signs flipped, but the differences average out over a 72 h window.)
+
+Interpretation: the result is robust to the Sx distance, the threshold and
+the exponent, and very sensitive to which wind drives it. The wind source is
+the decision that labels must settle first.

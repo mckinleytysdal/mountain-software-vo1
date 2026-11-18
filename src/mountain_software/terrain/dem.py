@@ -4,7 +4,9 @@ Source: NRCan MRDEM-30 DTM (Medium Resolution Digital Elevation Model, 30 m,
 bare-earth "terrain" model, not the surface model with trees). One
 cloud-optimised GeoTIFF covers Canada, so a small window can be read over
 HTTP without downloading the whole country. Licence: Open Government Licence
-- Canada 2.0. Projection: EPSG:3979 (Canada Atlas Lambert), metres.
+- Canada 2.0; attribution must also credit Copernicus GLO-30, its main
+source outside lidar areas. Vertical datum CGVD2013. Projection: EPSG:3979
+(Canada Atlas Lambert), metres.
 
 The window is cached in git-ignored ``data/raw/dem/`` so later runs and the
 maps read the same bytes.
@@ -25,7 +27,7 @@ MRDEM_DTM_URL = "https://canelevation-dem.s3.ca-central-1.amazonaws.com/mrdem-30
 MRDEM = {
     "dem_name": "NRCan MRDEM-30 DTM",
     "url": MRDEM_DTM_URL,
-    "licence": "Open Government Licence - Canada 2.0",
+    "licence": "Open Government Licence - Canada 2.0; contains modified Copernicus GLO-30 data",
     "stac": "https://datacube.services.geo.ca/stac/api/collections/mrdem-30",
 }
 DEFAULT_DEM_DIR = Path("data/raw/dem")

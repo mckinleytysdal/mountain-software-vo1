@@ -43,3 +43,5 @@ responses go to `data/raw/` (git-ignored).
 - Weather data by [Open-Meteo.com](https://open-meteo.com/) (CC BY 4.0, free
   tier is non-commercial), from Environment and Climate Change Canada's HRDPS
   model.
+- DEM: NRCan MRDEM-30 (Open Government Licence - Canada 2.0). Contains
+  modified Copernicus GLO-30 data.

@@ -23,10 +23,11 @@ def test_b0_leeward_is_downwind_and_circular():
 
 
 def test_transport_zero_below_threshold_and_grows_fast():
-    assert ex.transport_potential(20, 25, 3) == 0
-    assert ex.transport_potential(None, 25, 3) == 0
-    assert ex.transport_potential(50, 25, 3) == pytest.approx(1.0)
-    assert ex.transport_potential(75, 25, 3) == pytest.approx(8.0)
+    assert ex.transport_potential(20, 25, 4) == 0
+    assert ex.transport_potential(None, 25, 4) == 0
+    assert ex.transport_potential(25, 25, 4) == 0
+    assert ex.transport_potential(50, 25, 4) == pytest.approx(15.0)  # 2^4 - 1
+    assert ex.transport_potential(75, 25, 4) == pytest.approx(80.0)  # 3^4 - 1
 
 
 def test_snow_supply_bounds():
@@ -45,6 +46,7 @@ def test_sx_interpolation_across_north():
 def test_m1_sheltered_point_loads_exposed_point_scours():
     wx = hours(24, 50, 270, snow=1.0)
     sheltered = ex.score_point(wx, 90, {270.0: 15.0, 260.0: 15.0, 280.0: 15.0}, P)
+    assert P.sx_dmax_m == 300.0
     exposed = ex.score_point(wx, 270, {270.0: -15.0, 260.0: -15.0, 280.0: -15.0}, P)
     assert sheltered.m1_loading > 0 and sheltered.m1_scour == 0
     assert exposed.m1_scour > 0 and exposed.m1_loading == 0

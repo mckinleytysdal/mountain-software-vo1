@@ -117,7 +117,7 @@ def render_markdown(conn: sqlite3.Connection, route_id: str, as_of: str, top_n: 
         "- A 30 m DEM misses small features (cornices, small gullies, boulder fields).",
         "- Surface type (glacier, rock, snow cover) is not known and is ignored.",
         "",
-        f"Weather data by Open-Meteo.com (CC BY 4.0). DEM: NRCan MRDEM-30 (OGL-Canada 2.0). Official forecasts: {AVCAN_URL}",
+        f"Weather data by Open-Meteo.com (CC BY 4.0). DEM: NRCan MRDEM-30 (OGL-Canada 2.0), contains modified Copernicus GLO-30 data. Official forecasts: {AVCAN_URL}",
     ]
     return "\n".join(lines) + "\n"
 
@@ -162,7 +162,7 @@ def exposure_map(conn: sqlite3.Connection, route_id: str, as_of: str, dem_path: 
         0.01,
         0.02,
         "Exploratory research output, untested against observations. Not a hazard rating or an official warning. "
-        f"Official forecasts: {AVCAN_URL}. Weather: Open-Meteo.com (CC BY 4.0), GEM HRDPS. DEM: NRCan MRDEM-30.",
+        f"Official forecasts: {AVCAN_URL}. Weather: Open-Meteo.com (CC BY 4.0), GEM HRDPS. DEM: NRCan MRDEM-30 (OGL-Canada 2.0), contains modified Copernicus GLO-30 data.",
         fontsize=6.5,
         wrap=True,
     )

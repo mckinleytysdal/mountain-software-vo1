@@ -215,3 +215,13 @@ as-of minus that run time.
 **D33. Adding a collector variable makes older runs count as incomplete,** so
 a rerun of the backfill fetches them again and fills the new columns by
 upsert (no duplicate rows).
+
+## Literature check (2026-11-18)
+
+**D34. Parameters revised after the literature check** (details and citations
+in [literature.md](literature.md)): M1 transport now grows with U^4, not U^3
+(m1-sx-transport-v3); M1 uses Sx at 300 m by default, 100 m kept as a
+sensitivity run; the 25 km/h threshold is tied to Avalanche Canada's
+ridge-top wind classes. The MRDEM attribution now credits Copernicus GLO-30,
+as its licence requires. The ±45° leeward window and the TPI radii have no
+published standard; they stay as stated choices.

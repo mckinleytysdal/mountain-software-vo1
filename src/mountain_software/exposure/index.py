@@ -32,7 +32,7 @@ import numpy as np
 from ..geo import angular_difference_deg
 
 B0_VERSION = "b0-aspect-v1"
-M1_VERSION = "m1-sx-transport-v2"
+M1_VERSION = "m1-sx-transport-v3"
 
 
 @dataclass(frozen=True)
@@ -44,16 +44,22 @@ class ExposureParams:
     # model surface, which in these valleys rarely exceeds 20 km/h.
     wind_level: str = "700hPa"
     # M1: hourly wind (km/h) below which no snow is assumed to move.
+    # Avalanche Canada: light wind (1-25 km/h) moves little snow; moderate
+    # (25-40 km/h) is most conducive to wind slabs. Li & Pomeroy (1997) give
+    # 7.7 m/s (28 km/h) mean for dry snow at 10 m over flat ground.
     transport_threshold_kmh: float = 25.0
-    # M1: transport grows with the cube of the wind speed above threshold.
-    transport_exponent: float = 3.0
+    # M1: total blowing-snow transport grows with about the 4th power of wind
+    # speed (Pomeroy, Gray & Landine 1991, via Pomeroy & Brun 2001).
+    transport_exponent: float = 4.0
     # M1: fresh snow (cm) over the previous 72 h that counts as "full supply";
     # older snow still supplies a little (``old_snow_supply``).
     fresh_snow_full_cm: float = 20.0
     fresh_snow_hours: int = 72
     old_snow_supply: float = 0.2
-    # M1: Sx search distance (must exist in route_point_sx).
-    sx_dmax_m: float = 100.0
+    # M1: Sx search distance (must exist in route_point_sx). Winstral et al.
+    # (2002) found 100 m best on a fine DEM; on a 30 m DEM that is only 3
+    # cells, so 300 m (the MeteoIO/CHM default) is used, 100 m as a check.
+    sx_dmax_m: float = 300.0
     # Window: hours before the as-of time that are summed.
     window_hours: int = 72
     # A run is published 1-3 h after its nominal time (Open-Meteo docs for
@@ -145,10 +151,14 @@ def b0_leeward(aspect_deg: float | None, wind_from_deg: float | None, half_windo
 
 
 def transport_potential(wind_kmh: float | None, threshold_kmh: float, exponent: float) -> float:
-    """Relative amount of snow the wind could move in one hour (0 if calm)."""
+    """Relative amount of snow the wind could move in one hour (0 if calm).
+
+    (U / Ut)^n - 1 above the threshold Ut: zero at the threshold, then
+    growing with the n-th power of wind speed (n = 4 for total transport).
+    """
     if wind_kmh is None or wind_kmh <= threshold_kmh:
         return 0.0
-    return ((wind_kmh - threshold_kmh) / threshold_kmh) ** exponent
+    return (wind_kmh / threshold_kmh) ** exponent - 1.0
 
 
 def snow_supply(recent_snowfall_cm: float, full_cm: float, old_snow: float) -> float:

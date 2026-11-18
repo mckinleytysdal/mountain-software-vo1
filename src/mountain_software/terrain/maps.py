@@ -93,7 +93,7 @@ def classification_map(
         0.01,
         0.04,
         "Landform classes from a 30 m DEM (method {method}). Exploratory; not a hazard map. "
-        "Glacier, rock and snow surface are not classified. DEM: NRCan MRDEM-30, OGL-Canada 2.0. "
+        "Glacier, rock and snow surface are not classified. DEM: NRCan MRDEM-30 (OGL-Canada 2.0), contains modified Copernicus GLO-30 data. "
         "Official avalanche forecasts: avalanche.ca/forecasts".format(method=tf.METHOD_VERSION),
         fontsize=6.5,
         wrap=True,

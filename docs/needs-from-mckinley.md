@@ -22,3 +22,11 @@ Only things Claude cannot do or decide alone. Newest at the bottom.
 4. **Track origins.** Source URLs for the three third-party tracks, and who
    recorded the Silverhorn CalTopo track (it is treated as third-party until
    you say otherwise).
+5. **Review the 77 draft observations** in
+   `data/observations/trip_reports_draft.toml`. They come word for word from
+   your trip reports. For each one: fix anything wrong, add `wind_effect`
+   (loaded / scoured / none_seen) where you remember it, add lat/lon if your
+   original photos or tracks have them, then set `needs_review = false`.
+6. **New field entries.** Use `templates/field_observation.toml` on your next
+   trips, with `wind_effect` filled in. These are the labels the research
+   question needs.

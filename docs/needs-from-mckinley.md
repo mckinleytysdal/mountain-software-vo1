@@ -30,3 +30,11 @@ Only things Claude cannot do or decide alone. Newest at the bottom.
 6. **New field entries.** Use `templates/field_observation.toml` on your next
    trips, with `wind_effect` filled in. These are the labels the research
    question needs.
+
+## Answered 2026-11-18
+
+- 1: GPX files received; real-data checks pass (see decisions D45).
+- 2: North Victoria committed untrimmed.
+- 3: 3,388 m confirmed.
+- 4: origins unknown; treated as third-party tracks.
+- 5: the review is not needed. Future field entries with the template are what count.

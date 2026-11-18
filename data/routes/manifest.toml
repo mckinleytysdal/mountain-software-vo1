@@ -61,7 +61,7 @@ region_id = "icefield"
 peak_id = "athabasca"
 route_shape = "one_way"
 file = "third_party/silverhorn_caltopo.gpx"
-source = "CalTopo (owner and origin to confirm)"
+source = "CalTopo export, origin unknown (treated as a third-party track)"
 source_url = ""
 download_date = "2026-11-17"
 terms_note = "Third-party track of unconfirmed ownership. Reference geometry only; do not redistribute or commit. Glacier tracks are reference geometry only: crevasses and snow bridges change every season."
@@ -73,7 +73,8 @@ notes = "Timed, dated 2025-06-27. Not yet verified whether the line goes over Si
   distance_km = 10.49
   gain_m = 1598
   max_ele_m = 3457
-  points_clean = 1403
+  # SPEC.md lists 1,403 "cleaned points"; the file has 1,611 points, none
+  # repeated, and no simple rule reproduces 1,403. Not checked (decision D45).
 
 [[routes]]
 route_id = "north_victoria"
@@ -85,9 +86,9 @@ file = "own/north_victoria_2026-10-16_strava.gpx"
 source = "Strava export of McKinley's own activity, 2026-10-16"
 source_url = ""
 download_date = "2026-11-17"
-terms_note = "McKinley's own recording. May be committed after the Strava privacy-zone or end-trimming check; until then keep the file out of git (use data/routes/local/ or leave it uncommitted)."
+terms_note = "McKinley's own recording. Committed to the public repo untrimmed, by McKinley's decision on 2026-11-18."
 redistribution_allowed = true
-committed_to_repo = false
+committed_to_repo = true
 weather_dates = ["2026-10-16"]
 notes = "Strava's logged weather (about 0 C, 3.6 km/h SW) is a model estimate, not a measurement."
   [routes.expected]
@@ -104,7 +105,7 @@ peak_id = "sir_douglas"
 route_shape = "one_way"
 file = "third_party/sir_douglas_west_ridge_trailamigo.gpx"
 source = "TrailAmigo"
-source_url = ""
+source_url = "https://trailamigo.com/trails/7eef1c77-003c-4e0e-89be-41c6191fdd36"
 download_date = "2026-11-17"
 terms_note = "File carries a Trail Amigo copyright and licence tag. Do not redistribute or commit. Return leg not in the file. Rockfall hazard is significant on this peak."
 redistribution_allowed = false

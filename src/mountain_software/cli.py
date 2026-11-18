@@ -231,7 +231,17 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
-    return args.func(args)
+    from .weather.openmeteo import OpenMeteoError, RateLimited
+
+    try:
+        return args.func(args)
+    except RateLimited as exc:
+        print(f"Open-Meteo refused the request (rate limit): {exc}")
+        print("Nothing partial was lost: rerun the same command later and it continues where it stopped.")
+        return 2
+    except OpenMeteoError as exc:
+        print(f"Open-Meteo error: {exc}")
+        return 2
 
 
 if __name__ == "__main__":

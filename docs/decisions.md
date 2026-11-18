@@ -296,3 +296,20 @@ wind; with the mix, the top points are the upper NE ridge. Options `700hPa`,
 **D44. Migrations run one transaction each.** A numbering mistake put the
 route-date rename before the observations step; a database at version 6
 skipped it. Fixed order, made each step atomic, and added tests for both.
+
+## GPX files received (2026-11-18)
+
+**D45. Real tracks checked.** North Victoria (own Strava): 32.99 km raw,
+24.96 km after 10 s thinning, +1,843 m, max 3,392 m, so it matches the hand
+check. Sir Douglas (13.99 km, 814 points) and FHR (20.91 km, 3,953 clean
+points) match. Silverhorn matches on distance (10.52 km), gain (+1,598 m)
+and max elevation (3,457 m), but the file has 1,611 points with no repeats,
+and no simple rule gives SPEC.md's 1,403 "cleaned points". That one count is
+not checked.
+
+**D46. North Victoria track committed untrimmed**, by McKinley's decision
+("commit it"). The three other tracks have unknown or third-party origin
+and stay git-ignored: the repo is public, and the Sir Douglas file carries a
+Trail Amigo copyright notice.
+
+**D47. North Victoria summit height 3,388 m confirmed by McKinley.**

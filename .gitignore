@@ -27,3 +27,4 @@ Thumbs.db
 # McKinley's own tracks stay ignored until the privacy check is done.
 # To commit a cleared file, add a line like: !data/routes/own/north_victoria_2026-10-16_strava.gpx
 data/routes/own/*.gpx
+!data/routes/own/north_victoria_2026-10-16_strava.gpx

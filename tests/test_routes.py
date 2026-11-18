@@ -156,3 +156,26 @@ def test_unchanged_reload_keeps_downstream_rows(conn, routes_dir):
     forced = load_all(conn, routes_dir / "manifest.toml", force=True)
     assert set(forced.loaded) == {"timed", "untimed"}
     assert conn.execute("SELECT COUNT(*) FROM route_point_cells").fetchone()[0] == 0
+
+
+def test_migration_comments_match_their_position():
+    import inspect
+    import re
+
+    src = inspect.getsource(db)
+    numbers = [int(n) for n in re.findall(r"^    # (\d+):", src, flags=re.M)]
+    assert numbers == list(range(1, len(db.MIGRATIONS) + 1))
+
+
+def test_failed_migration_leaves_version_unchanged(tmp_path, monkeypatch):
+    import sqlite3
+
+    path = tmp_path / "x.sqlite"
+    db.connect(path).close()
+    good = len(db.MIGRATIONS)
+    monkeypatch.setattr(db, "MIGRATIONS", db.MIGRATIONS + ["CREATE TABLE extra (a INT); CREATE TABLE regions (b INT);"])
+    with pytest.raises(sqlite3.OperationalError):
+        db.connect(path)
+    c = sqlite3.connect(path)
+    assert c.execute("PRAGMA user_version").fetchone()[0] == good
+    assert "extra" not in {r[0] for r in c.execute("SELECT name FROM sqlite_master")}

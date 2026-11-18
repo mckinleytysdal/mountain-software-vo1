@@ -242,10 +242,6 @@ MIGRATIONS: list[str] = [
     ALTER TABLE forecast_snapshots ADD COLUMN temperature_700hpa_c REAL;
     ALTER TABLE weather_fetches ADD COLUMN variables TEXT;
     """,
-    # 7: a route's date is the local (Rockies) calendar date, not the UTC one
-    """
-    ALTER TABLE routes RENAME COLUMN track_date_utc TO track_date_local;
-    """,
     # 6: Module 5, observations
     """
     CREATE TABLE observations (
@@ -286,6 +282,40 @@ MIGRATIONS: list[str] = [
         note           TEXT
     );
     """,
+    # 7: a route's date is the local (Rockies) calendar date, not the UTC one
+    """
+    ALTER TABLE routes RENAME COLUMN track_date_utc TO track_date_local;
+    """,
+    # 8: weather stations for checking the model (raw data stays out of git)
+    """
+    CREATE TABLE stations (
+        station_id     INTEGER PRIMARY KEY,
+        network        TEXT NOT NULL,
+        name           TEXT NOT NULL,
+        lat            REAL NOT NULL,
+        lon            REAL NOT NULL,
+        elev_m         REAL,
+        source         TEXT,
+        external_id    TEXT
+    );
+    CREATE TABLE station_obs (
+        station_id       INTEGER NOT NULL REFERENCES stations(station_id),
+        valid_time_utc   TEXT NOT NULL,
+        air_temp_c       REAL,
+        wind_speed_kmh   REAL,
+        wind_from_deg    REAL,
+        wind_gust_kmh    REAL,
+        rel_humidity     REAL,
+        snow_height_cm   REAL,
+        PRIMARY KEY (station_id, valid_time_utc)
+    );
+    CREATE TABLE station_cells (
+        station_id   INTEGER NOT NULL REFERENCES stations(station_id),
+        model        TEXT NOT NULL,
+        cell_id      INTEGER NOT NULL REFERENCES weather_cells(cell_id),
+        PRIMARY KEY (station_id, model)
+    );
+    """,
 ]
 
 
@@ -306,9 +336,9 @@ def migrate(conn: sqlite3.Connection) -> int:
     for number, sql in enumerate(MIGRATIONS, start=1):
         if number <= current:
             continue
-        with conn:
-            conn.executescript(sql)
-            conn.execute(f"PRAGMA user_version = {number}")
+        # One transaction per step: the schema change and the version number
+        # are saved together or not at all.
+        conn.executescript(f"BEGIN;\n{sql}\nPRAGMA user_version = {number};\nCOMMIT;")
     return conn.execute("PRAGMA user_version").fetchone()[0]
 
 

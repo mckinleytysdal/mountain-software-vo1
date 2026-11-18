@@ -1,6 +1,6 @@
 # Prototype 0 status against SPEC.md
 
-Updated 2026-11-18. "Passed" means checked by a command that was run; the
+Updated 2026-11-18 (evening). "Passed" means checked by a command that was run; the
 command is named.
 
 ## Module 1 acceptance checks
@@ -34,3 +34,8 @@ command is named.
 | Tests pass | Passed |
 | One peak's terrain classes and exposure index produced reproducibly | North Victoria: landform map and M1/B0 run, from the repo commands plus the local track copy |
 | At least 10 field observations in the database | Draft observations from trip reports exist (low confidence, need review); no new field observations yet |
+
+## Beyond the checklist
+
+- Model wind checked against a ridge-top station (`docs/stations.md`).
+- 77 draft observations from the trip reports, all needing review, none with a wind-effect label.

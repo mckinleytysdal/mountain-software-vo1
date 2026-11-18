@@ -32,17 +32,20 @@ import numpy as np
 from ..geo import angular_difference_deg
 
 B0_VERSION = "b0-aspect-v1"
-M1_VERSION = "m1-sx-transport-v4"
+M1_VERSION = "m1-sx-transport-v5"
 
 
 @dataclass(frozen=True)
 class ExposureParams:
     # B0: leeward if aspect is within this many degrees of the downwind direction.
     b0_half_window_deg: float = 45.0
-    # M1: which model wind drives transport. "700hPa" = free-atmosphere wind
+    # M1: which model wind drives transport. "blend" (default) = 10 m and
+    # 700 hPa wind mixed by each point's height between the model surface
+    # and the 700 hPa height. "700hPa" = free-atmosphere wind
     # near ridge-top height (default); "10m" = wind 10 m above the smoothed
-    # model surface, which in these valleys rarely exceeds 20 km/h.
-    wind_level: str = "700hPa"
+    # model surface, which in these valleys rarely exceeds 20 km/h; "hybrid"
+    # = 700 hPa speed with 10 m direction.
+    wind_level: str = "blend"
     # M1: hourly wind (km/h) below which no snow is assumed to move.
     # The threshold is applied to ridge-top (700 hPa) wind by default. The
     # Avalanche Canada classes below describe ridge-top wind, which is why
@@ -82,6 +85,51 @@ class HourlyWeather:
     snowfall_cm: float | None
     product: str
     issue_time: datetime | None
+    # Filled only for wind_level "blend": both levels, so each route point
+    # can mix them by its own height (see blend_for_height).
+    speed_10m: float | None = None
+    from_10m: float | None = None
+    speed_700: float | None = None
+    from_700: float | None = None
+    z_700_m: float | None = None
+
+
+def _uv(speed: float, wind_from: float) -> tuple[float, float]:
+    """East and north components of a wind given as speed and FROM-direction."""
+    r = math.radians(wind_from)
+    return -speed * math.sin(r), -speed * math.cos(r)
+
+
+def blend_weight(z_point: float | None, z_cell: float | None, z_700: float | None) -> float | None:
+    """0 at the model surface, 1 at the 700 hPa height, linear in between."""
+    if z_point is None or z_cell is None or z_700 is None or z_700 <= z_cell:
+        return None
+    return min(1.0, max(0.0, (z_point - z_cell) / (z_700 - z_cell)))
+
+
+def blend_for_height(weather: list[HourlyWeather], z_point: float | None, z_cell: float | None) -> list[HourlyWeather]:
+    """Wind at a route point's height, mixed from 10 m and 700 hPa wind.
+
+    Analogy: the model knows the wind at the valley-floor model surface and
+    at about 3,000 m. A point part-way up gets a mix in proportion to its
+    height between the two. The mix is done on the wind's east and north
+    components (so 350° and 10° average to 0°, not 180°). On 90 days at the
+    Bosworth Upper ridge-top station this cut the mean error from 8.2 to
+    7.2 km/h compared with 700 hPa wind alone (docs/stations.md).
+    """
+    out = []
+    for w in weather:
+        k = blend_weight(z_point, z_cell, w.z_700_m)
+        if k is None or None in (w.speed_10m, w.from_10m, w.speed_700, w.from_700):
+            out.append(HourlyWeather(w.valid_time, None, None, w.snowfall_cm, w.product, w.issue_time))
+            continue
+        u1, v1 = _uv(w.speed_10m, w.from_10m)
+        u7, v7 = _uv(w.speed_700, w.from_700)
+        u, v = u1 + k * (u7 - u1), v1 + k * (v7 - v1)
+        speed = math.hypot(u, v)
+        wind_from = math.degrees(math.atan2(-u, -v)) % 360.0 if speed > 0 else None
+        out.append(HourlyWeather(w.valid_time, speed, wind_from, w.snowfall_cm, w.product, w.issue_time))
+    return out
 
 
 def _parse(t: str | None) -> datetime | None:
@@ -113,14 +161,19 @@ def best_available_weather(
     72 h window has 72 values.
     """
     fmt = "%Y-%m-%dT%H:%M:%SZ"
-    if wind_level == "700hPa":
+    extra = ", wind_speed_10m_kmh, wind_direction_10m_deg, wind_speed_700hpa_kmh, wind_direction_700hpa_deg, geopotential_height_700hpa_m"
+    if wind_level in ("700hPa", "blend"):
         spd, dirn = "wind_speed_700hpa_kmh", "wind_direction_700hpa_deg"
+    elif wind_level == "hybrid":
+        # Speed from 700 hPa (ridge-top strength), direction from 10 m (closer
+        # to terrain-steered flow). See docs/stations.md.
+        spd, dirn = "wind_speed_700hpa_kmh", "wind_direction_10m_deg"
     elif wind_level == "10m":
         spd, dirn = "wind_speed_10m_kmh", "wind_direction_10m_deg"
     else:
         raise ValueError(f"unknown wind_level {wind_level!r}")
     rows = conn.execute(
-        f"""SELECT valid_time_utc, issue_time_utc, {spd}, {dirn}, snowfall_cm
+        f"""SELECT valid_time_utc, issue_time_utc, {spd}, {dirn}, snowfall_cm{extra}
            FROM forecast_snapshots
            WHERE cell_id = ? AND product = 'single_run' AND valid_time_utc > ? AND valid_time_utc <= ? AND issue_time_utc <= ?
            ORDER BY valid_time_utc, issue_time_utc DESC""",
@@ -130,14 +183,14 @@ def best_available_weather(
     for r in rows:
         if r[0] in best:
             continue  # already have a newer run for this hour
-        best[r[0]] = HourlyWeather(_parse(r[0]), r[2], r[3], r[4], "single_run", _parse(r[1]))
+        best[r[0]] = HourlyWeather(_parse(r[0]), r[2], r[3], r[4], "single_run", _parse(r[1]), *r[5:10])
     if allow_stitched:
         for r in conn.execute(
-            f"""SELECT valid_time_utc, {spd}, {dirn}, snowfall_cm FROM forecast_snapshots
+            f"""SELECT valid_time_utc, {spd}, {dirn}, snowfall_cm{extra} FROM forecast_snapshots
                WHERE cell_id = ? AND product = 'historical_stitched' AND valid_time_utc > ? AND valid_time_utc <= ?""",
             (cell_id, start.strftime(fmt), min(end, as_of - timedelta(hours=publication_lag_hours)).strftime(fmt)),
         ):
-            best.setdefault(r[0], HourlyWeather(_parse(r[0]), r[1], r[2], r[3], "historical_stitched", None))
+            best.setdefault(r[0], HourlyWeather(_parse(r[0]), r[1], r[2], r[3], "historical_stitched", None, *r[4:9]))
     return [best[k] for k in sorted(best)]
 
 
@@ -304,8 +357,9 @@ def route_exposure(
     start = as_of - timedelta(hours=p.window_hours)
     dem = conn.execute("SELECT MAX(dem_id) FROM terrain_features WHERE route_id = ?", (route_id,)).fetchone()[0]
     pts = conn.execute(
-        """SELECT tf.seq, tf.aspect_true_deg, rpc.cell_id FROM terrain_features tf
+        """SELECT tf.seq, tf.aspect_true_deg, rpc.cell_id, tf.dem_elev_m, wc.model_elev_m FROM terrain_features tf
            JOIN route_point_cells rpc ON rpc.route_id = tf.route_id AND rpc.seq = tf.seq AND rpc.model = ?
+           JOIN weather_cells wc ON wc.cell_id = rpc.cell_id
            WHERE tf.route_id = ? AND tf.dem_id = ? ORDER BY tf.seq""",
         (p.model, route_id, dem),
     ).fetchall()
@@ -324,7 +378,7 @@ def route_exposure(
     results = []
     newest: datetime | None = None
     n_hours = n_stitched = 0
-    for seq, aspect, cell_id in pts:
+    for seq, aspect, cell_id, z_point, z_cell in pts:
         if cell_id not in weather_cache:
             weather_cache[cell_id] = best_available_weather(
                 conn, cell_id, start, as_of, as_of, allow_stitched, p.publication_lag_hours, p.wind_level
@@ -334,6 +388,8 @@ def route_exposure(
                 p.publication_lag_hours, p.wind_level,
             )
         wx = weather_cache[cell_id]
+        if p.wind_level == "blend":
+            wx = blend_for_height(wx, z_point, z_cell)
         r = score_point(wx, aspect, sx.get(seq, {}), p, history_cache[cell_id])
         r.seq = seq
         results.append(r)

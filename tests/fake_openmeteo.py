@@ -48,7 +48,8 @@ class FakeOpenMeteo:
             g_la, g_lo = snap(la), snap(lo)
             hourly = {"time": times}
             for k, v in enumerate(variables):
-                hourly[v] = [round(k + i * 0.1 + g_la - 51, 2) for i in range(n)]
+                base = 3000.0 if v.startswith("geopotential") else 0.0
+                hourly[v] = [round(base + k + i * 0.1 + g_la - 51, 2) for i in range(n)]
             units = {v: om.VARIABLES[v][0] for v in variables}
             units.update(self.units_override)
             out.append({

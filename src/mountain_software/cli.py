@@ -208,7 +208,7 @@ def build_parser() -> argparse.ArgumentParser:
     er.add_argument("--route", required=True)
     er.add_argument("--as-of", required=True, help="UTC time YYYY-MM-DDTHH:MM (end of the window)")
     er.add_argument("--window-hours", type=int, default=72)
-    er.add_argument("--wind-level", choices=["700hPa", "10m"], default="700hPa")
+    er.add_argument("--wind-level", choices=["blend", "700hPa", "hybrid", "10m"], default="blend")
     er.add_argument("--forecasts-only", action="store_true", help="never fall back to stitched archive values")
     er.add_argument("--out-dir", default="data/processed/reports")
     er.set_defaults(func=cmd_exposure_run)
@@ -217,7 +217,7 @@ def build_parser() -> argparse.ArgumentParser:
     es.add_argument("--start", required=True)
     es.add_argument("--end", required=True)
     es.add_argument("--hour", type=int, default=18, help="UTC hour the daily window ends (18 = noon MDT)")
-    es.add_argument("--wind-level", choices=["700hPa", "10m"], default="700hPa")
+    es.add_argument("--wind-level", choices=["blend", "700hPa", "hybrid", "10m"], default="blend")
     es.add_argument("--out", default="data/processed/reports/scan.csv")
     es.set_defaults(func=cmd_exposure_scan)
 

@@ -99,3 +99,15 @@ def test_snow_before_window_counts():
     with_hist = ex.score_point(window, 90.0, {270.0: 10.0}, p, history)
     without = ex.score_point(window, 90.0, {270.0: 10.0}, p)
     assert with_hist.m1_loading > without.m1_loading > 0
+
+
+def test_hybrid_wind_uses_700_speed_and_10m_direction(ready):
+    conn = ready
+    cell = col.cells_for(conn)[0].cell_id
+    as_of = datetime(2026, 10, 16, 12, tzinfo=UTC)
+    start = datetime(2026, 10, 16, 6, tzinfo=UTC)
+    hy = ex.best_available_weather(conn, cell, start, as_of, as_of, wind_level="hybrid")
+    up = ex.best_available_weather(conn, cell, start, as_of, as_of, wind_level="700hPa")
+    lo = ex.best_available_weather(conn, cell, start, as_of, as_of, wind_level="10m")
+    assert [w.wind_speed_kmh for w in hy] == [w.wind_speed_kmh for w in up]
+    assert [w.wind_from_deg for w in hy] == [w.wind_from_deg for w in lo]

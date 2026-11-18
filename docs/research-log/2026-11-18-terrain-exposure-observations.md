@@ -37,3 +37,17 @@ be tested yet: there are no wind-effect labels. The cheapest next labels are
 (a) McKinley's own field entries with the template, (b) Avalanche Canada MIN
 reports that mention wind slabs or cornices with a location, and (c)
 Sentinel-2 imagery of scoured versus loaded slopes after a wind event.
+
+## Later the same day: station check
+
+- Bosworth Upper (2,745 m) vs HRDPS over 90 days: 10 m model wind mean
+  6.9 km/h against 24.4 km/h measured; 700 hPa wind +4.3 km/h bias, r 0.78.
+  A height-weighted blend of the two had the lowest error (MAE 7.2 km/h).
+- With the blend (M1 v5), 81 of 86 days show some transport. The strongest
+  loading days were 2026-11-08/09, when the station measured up to 39 km/h
+  S-SE wind, and the model had about 6 cm of snow. On 2026-11-09 the
+  top-ranked points were the upper NE ridge of North Victoria (east-facing,
+  3,090-3,360 m), the lee of that S-SW wind.
+- Median rank correlation between B0 and M1 across days: 0.32. M1 is no
+  longer a restatement of aspect, but whether it is BETTER is still untested:
+  there are no wind-effect labels yet.

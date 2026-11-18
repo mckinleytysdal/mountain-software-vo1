@@ -276,3 +276,23 @@ until McKinley adds them from his original photos or tracks.
 - An observation's `forecast_issue` after its observed time is rejected.
 - The threshold applied to 700 hPa wind is intended: Avalanche Canada's wind
   classes describe ridge-top wind. The station check (next) tests this.
+
+## Station check and wind blending (2026-11-18)
+
+**D42. Model wind is checked against Avalanche Canada ridge-top stations**
+(Bosworth Upper, Tangle Ridge, Burstall Pass), using their open API. Raw
+station data is never committed (their terms forbid reproduction without
+consent); only summary statistics are published (`docs/stations.md`).
+
+**D43. M1 v5 mixes 10 m and 700 hPa wind by height.** Each route point gets a
+wind mixed on east/north components with weight (point DEM height - model
+cell height) / (700 hPa height - model cell height), clamped to 0-1. On 90 days
+at Bosworth Upper this had the lowest error (MAE 7.2 km/h vs 8.2 for 700 hPa
+alone and 17.6 for 10 m). With pure 700 hPa wind, valley-floor gullies near
+Lake Louise ranked highest on 2026-11-09 because they received ridge-top
+wind; with the mix, the top points are the upper NE ridge. Options `700hPa`,
+`hybrid` and `10m` stay available.
+
+**D44. Migrations run one transaction each.** A numbering mistake put the
+route-date rename before the observations step; a database at version 6
+skipped it. Fixed order, made each step atomic, and added tests for both.

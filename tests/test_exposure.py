@@ -2,6 +2,8 @@
 
 from datetime import UTC, datetime, timedelta
 
+import math
+
 import pytest
 
 from mountain_software.exposure import index as ex
@@ -69,3 +71,17 @@ def test_relative_rank():
     assert ex.relative_rank([1.0, 1.0, 2.0]) == [0.25, 0.25, 1.0]
     assert ex.relative_rank([None, 2.0]) == [None, 0.5]
     assert ex.relative_rank([None]) == [None]
+
+
+def test_blend_weight_and_vector_mix():
+    assert ex.blend_weight(2000, 2000, 3000) == 0.0
+    assert ex.blend_weight(2500, 2000, 3000) == 0.5
+    assert ex.blend_weight(3500, 2000, 3000) == 1.0
+    assert ex.blend_weight(None, 2000, 3000) is None
+    w = ex.HourlyWeather(T0, None, None, 0.0, "single_run", T0, speed_10m=10.0, from_10m=350.0,
+                         speed_700=10.0, from_700=10.0, z_700_m=3000.0)
+    mid = ex.blend_for_height([w], 2500.0, 2000.0)[0]
+    assert ex.angular_difference_deg(mid.wind_from_deg, 0.0) < 1e-6  # not 180
+    assert mid.wind_speed_kmh == pytest.approx(10 * math.cos(math.radians(10)))
+    top = ex.blend_for_height([w], 3200.0, 2000.0)[0]
+    assert top.wind_speed_kmh == pytest.approx(10.0) and top.wind_from_deg == pytest.approx(10.0)

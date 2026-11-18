@@ -162,6 +162,58 @@ MIGRATIONS: list[str] = [
         ON forecast_snapshots (cell_id, model, product, issue_key, valid_time_utc);
     CREATE INDEX forecast_snapshots_valid ON forecast_snapshots (valid_time_utc);
     """,
+    # 3: Module 3, DEM terrain features
+    """
+    CREATE TABLE dem_sources (
+        dem_id                 INTEGER PRIMARY KEY,
+        name                   TEXT NOT NULL,
+        url                    TEXT NOT NULL,
+        licence                TEXT NOT NULL,
+        crs                    TEXT NOT NULL,
+        res_m                  REAL NOT NULL,
+        path                   TEXT NOT NULL,
+        sha256                 TEXT NOT NULL UNIQUE,
+        fetched_at_utc         TEXT,
+        request_bounds_wgs84   TEXT
+    );
+
+    -- Terrain at each route point. Elevation here is DEM elevation, the one
+    -- to use for terrain work (GPX elevation stays in route_points).
+    CREATE TABLE terrain_features (
+        route_id            TEXT NOT NULL,
+        seq                 INTEGER NOT NULL,
+        dem_id              INTEGER NOT NULL REFERENCES dem_sources(dem_id),
+        dem_elev_m          REAL,
+        slope_deg           REAL,
+        aspect_true_deg     REAL,
+        convergence_deg     REAL NOT NULL,
+        curvature_per_m     REAL,
+        tpi_small_m         REAL,
+        tpi_large_m         REAL,
+        tpi_small_std       REAL,
+        tpi_large_std       REAL,
+        slope_position      TEXT,
+        landform_class      TEXT,
+        surface_class       TEXT NOT NULL DEFAULT 'unknown',
+        params_json         TEXT NOT NULL,
+        method_version      TEXT NOT NULL,
+        PRIMARY KEY (route_id, seq, dem_id),
+        FOREIGN KEY (route_id, seq) REFERENCES route_points(route_id, seq) ON DELETE CASCADE
+    );
+
+    -- Maximum upwind slope (Sx) for each route point and wind direction.
+    CREATE TABLE route_point_sx (
+        route_id             TEXT NOT NULL,
+        seq                  INTEGER NOT NULL,
+        dem_id               INTEGER NOT NULL REFERENCES dem_sources(dem_id),
+        dmax_m               REAL NOT NULL,
+        wind_from_true_deg   REAL NOT NULL,
+        sx_deg               REAL,
+        method_version       TEXT NOT NULL,
+        PRIMARY KEY (route_id, seq, dem_id, dmax_m, wind_from_true_deg),
+        FOREIGN KEY (route_id, seq) REFERENCES route_points(route_id, seq) ON DELETE CASCADE
+    );
+    """,
 ]
 
 

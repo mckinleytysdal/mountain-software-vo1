@@ -92,6 +92,20 @@ def cmd_weather_backfill(args: argparse.Namespace) -> int:
     return 1 if failed else 0
 
 
+def cmd_terrain_compute(args: argparse.Namespace) -> int:
+    from .terrain.pipeline import route_terrain
+
+    conn = db.connect(args.db)
+    route_ids = args.route or [r[0] for r in conn.execute("SELECT route_id FROM routes ORDER BY route_id")]
+    for route_id in route_ids:
+        summary = route_terrain(conn, route_id)
+        print(
+            f"{route_id}: {summary['points']} route points, DEM window {summary['dem_shape']}, "
+            f"{summary['points_outside_dem']} outside DEM, grid convergence {summary['convergence_deg_mean']:.1f} deg"
+        )
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="mountain", description="Mountain Software research pipeline")
     parser.add_argument("--db", default=str(db.DEFAULT_DB_PATH), help="SQLite database path")
@@ -125,6 +139,11 @@ def build_parser() -> argparse.ArgumentParser:
                 default="0,12",
                 help="UTC run hours to fetch as true forecasts, e.g. 0,6,12,18; empty string for stitched only",
             )
+
+    terrain = sub.add_parser("terrain", help="DEM terrain features").add_subparsers(dest="action", required=True)
+    tc = terrain.add_parser("compute", help="terrain features and Sx for route points (reads MRDEM-30)")
+    tc.add_argument("--route", action="append", help="route_id (repeatable; default all loaded routes)")
+    tc.set_defaults(func=cmd_terrain_compute)
     return parser
 
 

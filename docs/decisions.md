@@ -135,3 +135,45 @@ rare.
 **D20. The daily schedule is not switched on.** `uv run mountain weather
 collect` is the command a scheduler would run. No cron job, systemd timer or
 cloud schedule exists.
+
+## Module 3: DEM terrain features
+
+**D21. DEM = NRCan MRDEM-30 DTM** (30 m, bare earth, Canada-wide, one
+cloud-optimised GeoTIFF, Open Government Licence - Canada 2.0, EPSG:3979).
+A route's window is read over HTTP in about a second and cached in
+git-ignored `data/raw/dem/`. NRCan HRDEM (1-2 m lidar) was checked: the STAC
+catalogue lists a mosaic tile and a BC East Kootenay lidar project near Lake
+Louise, but the Alberta side is unlikely to be covered. HRDEM is a later
+upgrade where coverage exists. Copernicus GLO-30 is reachable as a fallback.
+
+**D22. Aspect is converted from grid north to true north.** In EPSG:3979 grid
+north is about 19° off true north at North Victoria (central meridian
+-95°). Without the correction every aspect, and every leeward test, would be
+19° wrong. The convergence is stored per route point. Wind directions are
+converted the other way before Sx is computed.
+
+**D23. Features per route point:** DEM elevation (bilinear), slope and aspect
+(Horn 1981), curvature (minus the Laplacian; positive = convex), TPI at
+150 m and 1,000 m (raw and standardised over the window), Weiss slope
+position from the 1,000 m TPI, a rule-based landform class, and Sx.
+
+**D24. Landform classes (method terrain-v2), first rule wins:** ridge
+(small TPI > +1 SD, or > +0.5 SD on high ground), couloir/gully (small TPI
+< -1 SD and slope >= 30°), basin/valley (large TPI < -0.5 SD and slope <
+25°), steep face (slope >= 30°), open slope. Version 1 let the large TPI alone
+mark ridges; on the North Victoria map that painted whole upper mountains as
+"ridge", so it was replaced (failed approach, kept here on purpose).
+
+**D25. Glacier, rock and snow are surface classes, kept separate** from
+landform and stored as `unknown` until glacier outlines (RGI) and imagery
+(Sentinel-2) are added.
+
+**D26. Sx (Winstral et al. 2002) for 36 wind directions** (every 10°, true
+north), each averaged over a 30° window in 5° steps, at search distances
+100 m and 300 m. Positive = sheltered by higher ground upwind, negative =
+exposed. Parameters are stored with every row and are pending a literature
+check (see the research log).
+
+**D27. Map colours are categorical** (purple, blues, teal, brown, grey) and
+avoid the green-yellow-orange-red-black danger scale. The map has a true-north
+arrow because the grid is drawn grid-north-up.

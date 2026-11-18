@@ -10,18 +10,24 @@
 #
 # `expected` holds the hand-checked numbers from SPEC.md section 4. The
 # real-data tests compare against them and are skipped when a file is missing.
+#
+# Weather backfill: `backfill_days` on a region = the last N whole UTC days;
+# `weather_dates` on a route = single trip dates.
 
 [[regions]]
 region_id = "icefield"
 name = "Columbia Icefield (Athabasca)"
+backfill_days = 30
 
 [[regions]]
 region_id = "lake_louise"
 name = "Lake Louise (North Victoria group)"
+backfill_days = 90
 
 [[regions]]
 region_id = "burstall"
 name = "Burstall (Mount Sir Douglas and the French-Haig-Robertson line)"
+backfill_days = 30
 notes = "Sir Douglas and FHR are one area with different features and elevation ranges. They always travel together in train/test splits."
 
 [[peaks]]
@@ -58,9 +64,10 @@ file = "third_party/silverhorn_caltopo.gpx"
 source = "CalTopo (owner and origin to confirm)"
 source_url = ""
 download_date = "2026-11-17"
-terms_note = "Third-party track of unconfirmed ownership. Reference geometry only; do not redistribute or commit. Glacier tracks are not safe lines."
+terms_note = "Third-party track of unconfirmed ownership. Reference geometry only; do not redistribute or commit. Glacier tracks are reference geometry only: crevasses and snow bridges change every season."
 redistribution_allowed = false
 committed_to_repo = false
+weather_dates = ["2025-06-27"]
 notes = "Timed, dated 2025-06-27. Not yet verified whether the line goes over Silverhorn or up the North Glacier."
   [routes.expected]
   distance_km = 10.49
@@ -81,6 +88,7 @@ download_date = "2026-11-17"
 terms_note = "McKinley's own recording. May be committed after the Strava privacy-zone or end-trimming check; until then keep the file out of git (use data/routes/local/ or leave it uncommitted)."
 redistribution_allowed = true
 committed_to_repo = false
+weather_dates = ["2026-10-16"]
 notes = "Strava's logged weather (about 0 C, 3.6 km/h SW) is a model estimate, not a measurement."
   [routes.expected]
   distance_raw_km = 33.0

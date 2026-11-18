@@ -6,7 +6,7 @@ Order of steps for one track:
 3. thin: if the track is timed (has a time on each point), keep ~1 point / 10 s
 4. measure: distance, GPX elevation gain, min/max GPX elevation
 5. resample: one route point every ~250 m along the track
-6. store: replace this route's rows in the database (safe to rerun)
+6. store: replace this route's rows in the database (rerunning gives the same result)
 """
 
 from __future__ import annotations

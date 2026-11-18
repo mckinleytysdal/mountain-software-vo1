@@ -90,6 +90,78 @@ MIGRATIONS: list[str] = [
         PRIMARY KEY (route_id, seq)
     );
     """,
+    # 2: Module 2, weather cells and forecasts
+    """
+    -- One row per model grid cell. The cell is named by the grid coordinates
+    -- the API returns, never by the coordinates we asked for.
+    CREATE TABLE weather_cells (
+        cell_id          INTEGER PRIMARY KEY,
+        model            TEXT NOT NULL,
+        grid_lat         REAL NOT NULL,
+        grid_lon         REAL NOT NULL,
+        model_elev_m     REAL,
+        first_seen_utc   TEXT NOT NULL,
+        UNIQUE (model, grid_lat, grid_lon)
+    );
+
+    -- Which cell each route point falls in.
+    CREATE TABLE route_point_cells (
+        route_id             TEXT NOT NULL,
+        seq                  INTEGER NOT NULL,
+        model                TEXT NOT NULL,
+        cell_id              INTEGER NOT NULL REFERENCES weather_cells(cell_id),
+        distance_to_cell_m   REAL NOT NULL,
+        ele_offset_gpx_m     REAL,
+        method_version       TEXT NOT NULL,
+        PRIMARY KEY (route_id, seq, model),
+        FOREIGN KEY (route_id, seq) REFERENCES route_points(route_id, seq) ON DELETE CASCADE
+    );
+
+    -- One row per HTTP request to a weather API, pointing at the raw file.
+    CREATE TABLE weather_fetches (
+        fetch_id          INTEGER PRIMARY KEY,
+        endpoint          TEXT NOT NULL,
+        product           TEXT NOT NULL,
+        model             TEXT NOT NULL,
+        params_json       TEXT NOT NULL,
+        raw_path          TEXT NOT NULL,
+        raw_sha256        TEXT NOT NULL,
+        fetched_at_utc    TEXT NOT NULL,
+        issue_time_utc    TEXT,
+        issue_time_note   TEXT NOT NULL,
+        units_json        TEXT,
+        missing_json      TEXT,
+        n_locations       INTEGER NOT NULL
+    );
+
+    -- Hourly model values per cell.
+    --   product 'single_run'           one model run; issue_time_utc is the true run (initialisation) time
+    --   product 'historical_stitched'  first hours of successive runs glued together; issue time unknown
+    CREATE TABLE forecast_snapshots (
+        snapshot_id              INTEGER PRIMARY KEY,
+        cell_id                  INTEGER NOT NULL REFERENCES weather_cells(cell_id),
+        model                    TEXT NOT NULL,
+        product                  TEXT NOT NULL CHECK (product IN ('single_run', 'historical_stitched')),
+        issue_time_utc           TEXT,
+        issue_time_known         INTEGER NOT NULL CHECK (issue_time_known IN (0, 1)),
+        issue_key                TEXT GENERATED ALWAYS AS (COALESCE(issue_time_utc, 'unknown')) VIRTUAL,
+        valid_time_utc           TEXT NOT NULL,
+        lead_hours               REAL,
+        temperature_2m_c         REAL,
+        wind_speed_10m_kmh       REAL,
+        wind_direction_10m_deg   REAL,
+        wind_gusts_10m_kmh       REAL,
+        snowfall_cm              REAL,
+        precipitation_mm         REAL,
+        fetch_id                 INTEGER NOT NULL REFERENCES weather_fetches(fetch_id),
+        method_version           TEXT NOT NULL,
+        CHECK ((product = 'single_run' AND issue_time_utc IS NOT NULL AND issue_time_known = 1 AND lead_hours IS NOT NULL)
+            OR (product = 'historical_stitched' AND issue_time_utc IS NULL AND issue_time_known = 0 AND lead_hours IS NULL))
+    );
+    CREATE UNIQUE INDEX forecast_snapshots_one_value
+        ON forecast_snapshots (cell_id, model, product, issue_key, valid_time_utc);
+    CREATE INDEX forecast_snapshots_valid ON forecast_snapshots (valid_time_utc);
+    """,
 ]
 
 

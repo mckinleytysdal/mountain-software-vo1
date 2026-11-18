@@ -145,6 +145,20 @@ def cmd_obs_load(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_exposure_scan(args: argparse.Namespace) -> int:
+    from .exposure import index as ex
+    from .exposure.scan import scan
+
+    conn = db.connect(args.db)
+    rows = scan(
+        conn, args.route, date.fromisoformat(args.start), date.fromisoformat(args.end), Path(args.out),
+        hour_utc=args.hour, params=ex.ExposureParams(wind_level=args.wind_level),
+    )
+    active = [r for r in rows if r["m1_informative"]]
+    print(f"{len(rows)} days scanned, {len(active)} with wind transport in M1; CSV: {args.out}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="mountain", description="Mountain Software research pipeline")
     parser.add_argument("--db", default=str(db.DEFAULT_DB_PATH), help="SQLite database path")
@@ -195,6 +209,14 @@ def build_parser() -> argparse.ArgumentParser:
     er.add_argument("--forecasts-only", action="store_true", help="never fall back to stitched archive values")
     er.add_argument("--out-dir", default="data/processed/reports")
     er.set_defaults(func=cmd_exposure_run)
+    es = exposure.add_parser("scan", help="run B0/M1 once a day over a date range and write a CSV")
+    es.add_argument("--route", required=True)
+    es.add_argument("--start", required=True)
+    es.add_argument("--end", required=True)
+    es.add_argument("--hour", type=int, default=18, help="UTC hour the daily window ends (18 = noon MDT)")
+    es.add_argument("--wind-level", choices=["700hPa", "10m"], default="700hPa")
+    es.add_argument("--out", default="data/processed/reports/scan.csv")
+    es.set_defaults(func=cmd_exposure_scan)
 
     obs = sub.add_parser("obs", help="field observations").add_subparsers(dest="action", required=True)
     ol = obs.add_parser("load", help="check and load observation TOML files")

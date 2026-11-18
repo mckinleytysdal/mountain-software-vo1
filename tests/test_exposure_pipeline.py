@@ -54,3 +54,15 @@ def test_route_exposure_stores_relative_index(ready):
     # Rerun for the same as_of replaces, not duplicates.
     ex.store_exposure(conn, result)
     assert conn.execute("SELECT COUNT(*) FROM exposure_scores").fetchone()[0] == n
+
+
+def test_scan_writes_one_row_per_day(ready, tmp_path):
+    from datetime import date
+
+    from mountain_software.exposure.scan import scan
+
+    rows = scan(ready, "cone_walk", date(2026, 10, 15), date(2026, 10, 16), tmp_path / "s.csv", hour_utc=12,
+                params=ex.ExposureParams(transport_threshold_kmh=1.0))
+    assert len(rows) == 2
+    assert (tmp_path / "s.csv").read_text().count("\n") == 3
+    assert rows[1]["m1_informative"] is True

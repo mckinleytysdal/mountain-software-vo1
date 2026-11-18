@@ -31,7 +31,14 @@ uv run mountain routes load          # Module 1: GPX -> 250 m route points (SQLi
 uv run mountain weather cells        # Module 2: find the HRDPS cell of each route point
 uv run mountain weather backfill     # Module 2: archive backfill (windows from the manifest)
 uv run mountain weather collect      # Module 2: newest model run (the future daily job; not scheduled)
+uv run mountain terrain compute      # Module 3: DEM terrain features and Sx per route point
+uv run mountain exposure run --route north_victoria --as-of 2026-10-16T06:00   # Module 4
+uv run mountain obs load data/observations/<file>.toml                         # Module 5
 ```
+
+Status against the spec: [`docs/status.md`](docs/status.md). Mini PC notes:
+[`docs/minipc-setup.md`](docs/minipc-setup.md). Parameter sources:
+[`docs/literature.md`](docs/literature.md).
 
 The database is `data/processed/mountain.sqlite` (git-ignored). Raw API
 responses go to `data/raw/` (git-ignored).

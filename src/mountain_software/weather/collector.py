@@ -90,8 +90,8 @@ def _record_fetch(
             missing[k] = missing.get(k, 0) + v
     cur = conn.execute(
         """INSERT INTO weather_fetches (endpoint, product, model, params_json, raw_path, raw_sha256,
-            fetched_at_utc, issue_time_utc, issue_time_note, units_json, missing_json, n_locations)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            fetched_at_utc, issue_time_utc, issue_time_note, units_json, missing_json, n_locations, variables)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
         (
             url,
             product,
@@ -105,6 +105,7 @@ def _record_fetch(
             json.dumps(units, ensure_ascii=False, sort_keys=True),
             json.dumps(missing, sort_keys=True),
             len(series),
+            params.get("hourly"),
         ),
     )
     return int(cur.lastrowid)
@@ -297,16 +298,26 @@ def _cell_params(cells: list[Cell], model: str) -> dict[str, Any]:
 
 
 def run_already_stored(conn: sqlite3.Connection, cells: list[Cell], run: datetime, model: str = om.MODEL) -> bool:
+    """True when every cell has this run, fetched with every current variable.
+
+    When a variable is added to the collector, older fetches lack it, so the
+    run counts as not stored and a rerun fetches it again (an upsert fills
+    the new columns without duplicating rows).
+    """
     if not cells:
         return True
     ids = [c.cell_id for c in cells]
-    n = conn.execute(
-        f"""SELECT COUNT(DISTINCT cell_id) FROM forecast_snapshots
-            WHERE model = ? AND product = 'single_run' AND issue_time_utc = ?
-            AND cell_id IN ({','.join('?' * len(ids))})""",
+    rows = conn.execute(
+        f"""SELECT f.cell_id, w.variables FROM forecast_snapshots f
+            JOIN weather_fetches w ON w.fetch_id = f.fetch_id
+            WHERE f.model = ? AND f.product = 'single_run' AND f.issue_time_utc = ?
+            AND f.cell_id IN ({','.join('?' * len(ids))})
+            GROUP BY f.cell_id""",
         [model, om.utc_iso(run), *ids],
-    ).fetchone()[0]
-    return n == len(ids)
+    ).fetchall()
+    wanted = set(om.VARIABLES)
+    complete = {r[0] for r in rows if r[1] and wanted <= set(r[1].split(","))}
+    return len(complete) == len(ids)
 
 
 def fetch_single_run(

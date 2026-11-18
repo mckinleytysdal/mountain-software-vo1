@@ -214,6 +214,34 @@ MIGRATIONS: list[str] = [
         FOREIGN KEY (route_id, seq) REFERENCES route_points(route_id, seq) ON DELETE CASCADE
     );
     """,
+    # 4: Module 4, relative exposure to potential wind loading
+    """
+    CREATE TABLE exposure_scores (
+        route_id            TEXT NOT NULL,
+        seq                 INTEGER NOT NULL,
+        method              TEXT NOT NULL CHECK (method IN ('B0', 'M1')),
+        method_version      TEXT NOT NULL,
+        as_of_utc           TEXT NOT NULL,
+        window_start_utc    TEXT NOT NULL,
+        window_end_utc      TEXT NOT NULL,
+        data_age_hours      REAL,
+        inputs_json         TEXT NOT NULL,
+        raw_score           REAL,
+        relative_index      REAL CHECK (relative_index IS NULL OR (relative_index >= 0 AND relative_index <= 1)),
+        detail_json         TEXT,
+        created_at_utc      TEXT NOT NULL,
+        PRIMARY KEY (route_id, seq, method, method_version, as_of_utc),
+        FOREIGN KEY (route_id, seq) REFERENCES route_points(route_id, seq) ON DELETE CASCADE
+    );
+    """,
+    # 5: 700 hPa (about ridge-top height) wind, height and temperature
+    """
+    ALTER TABLE forecast_snapshots ADD COLUMN wind_speed_700hpa_kmh REAL;
+    ALTER TABLE forecast_snapshots ADD COLUMN wind_direction_700hpa_deg REAL;
+    ALTER TABLE forecast_snapshots ADD COLUMN geopotential_height_700hpa_m REAL;
+    ALTER TABLE forecast_snapshots ADD COLUMN temperature_700hpa_c REAL;
+    ALTER TABLE weather_fetches ADD COLUMN variables TEXT;
+    """,
 ]
 
 

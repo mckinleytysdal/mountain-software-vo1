@@ -177,3 +177,41 @@ check (see the research log).
 **D27. Map colours are categorical** (purple, blues, teal, brown, grey) and
 avoid the green-yellow-orange-red-black danger scale. The map has a true-north
 arrow because the grid is drawn grid-north-up.
+
+## Module 4: first exposure index
+
+**D28. Output = "relative exposure to potential wind loading"**, a rank from
+0 to 1 among the points of one route for one time window. When every point
+scores the same (for example no transport at all), the index is left empty
+and the report says "no result for this window", rather than showing 0.5
+everywhere.
+
+**D29. B0 baseline:** leeward when aspect (true north) is within ±45° of the
+downwind direction. Reported per point as the fraction of hours leeward.
+
+**D30. M1 (method m1-sx-transport-v2):** for each hour,
+transport = ((U - Ut) / Ut)^3 above the threshold Ut (25 km/h), times a snow
+supply term (0.2 for old snow, rising to 1 with 20 cm of snowfall in the
+previous 72 h), times sin(Sx) for that hour's wind direction (100 m search).
+Positive Sx adds to loading, negative to scour. Net = loading - scour,
+summed over 72 h. Every constant is a parameter stored with the result and
+is a first guess pending the literature check.
+
+**D31. Ridge-top wind drives M1, not 10 m wind.** In 90 days of HRDPS data
+(2026-08-20 to 2026-11-17), the 10 m wind at the North Victoria summit cell
+never exceeded 25 km/h (maximum 18 km/h), while 700 hPa wind on a sample day
+reached 61 km/h. The 10 m wind sits over a model surface about 1,000 m below
+the summit. M1 v1 used 10 m wind and found no transport at all on any day
+(failed approach, kept on purpose). The collector now also stores 700 hPa wind
+speed, direction, geopotential height and temperature (10 variables, still
+one API call per location), and M1 uses 700 hPa wind by default
+(`--wind-level 10m` remains available for comparison).
+
+**D32. No look-ahead in the index:** each hour uses the newest model run that
+was already published at the as-of time (run time + 3 h publication lag,
+from Open-Meteo's 1-3 h figure for regional models). The data age reported is
+as-of minus that run time.
+
+**D33. Adding a collector variable makes older runs count as incomplete,** so
+a rerun of the backfill fetches them again and fills the new columns by
+upsert (no duplicate rows).

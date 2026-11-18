@@ -47,6 +47,13 @@ VARIABLES: dict[str, tuple[str, str]] = {
     "wind_gusts_10m": ("km/h", "wind_gusts_10m_kmh"),
     "snowfall": ("cm", "snowfall_cm"),
     "precipitation": ("mm", "precipitation_mm"),
+    # Free-atmosphere wind at the 700 hPa pressure level, about 3,000 m above
+    # sea level here: close to ridge-top height, and not slowed by the smooth
+    # model surface. Forecasters use ridge-top wind to judge snow transport.
+    "wind_speed_700hPa": ("km/h", "wind_speed_700hpa_kmh"),
+    "wind_direction_700hPa": ("°", "wind_direction_700hpa_deg"),
+    "geopotential_height_700hPa": ("m", "geopotential_height_700hpa_m"),
+    "temperature_700hPa": ("°C", "temperature_700hpa_c"),
 }
 
 # Ask for the units explicitly, so a change of API default cannot slip through.

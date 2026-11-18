@@ -237,3 +237,20 @@ def test_cell_drift_is_detected(loaded, raw_dir):
     cells = [col.Cell(c.cell_id, c.lat + 0.01, c.lon) for c in col.cells_for(loaded)]
     with pytest.raises(om.ResponseError, match="drifted"):
         col.fetch_single_run(loaded, api, cells, datetime(2026, 10, 15, 12, tzinfo=UTC), raw_dir, sleep=NO_SLEEP)
+
+
+def test_new_variable_makes_old_runs_refetch_without_duplicates(loaded, raw_dir):
+    api = FakeOpenMeteo()
+    col.discover_cells(loaded, api, raw_dir, sleep=NO_SLEEP)
+    cells = col.cells_for(loaded)
+    run = datetime(2026, 10, 15, 12, tzinfo=UTC)
+    col.fetch_single_run(loaded, api, cells, run, raw_dir, sleep=NO_SLEEP)
+    assert col.run_already_stored(loaded, cells, run)
+    # Pretend the run was fetched before 700 hPa variables existed.
+    loaded.execute("UPDATE weather_fetches SET variables = 'temperature_2m,wind_speed_10m' WHERE product = 'single_run'")
+    assert not col.run_already_stored(loaded, cells, run)
+    n = loaded.execute("SELECT COUNT(*) FROM forecast_snapshots").fetchone()[0]
+    col.fetch_single_run(loaded, api, cells, run, raw_dir, sleep=NO_SLEEP)
+    assert loaded.execute("SELECT COUNT(*) FROM forecast_snapshots").fetchone()[0] == n
+    assert col.run_already_stored(loaded, cells, run)
+    assert loaded.execute("SELECT COUNT(*) FROM forecast_snapshots WHERE wind_speed_700hpa_kmh IS NULL").fetchone()[0] == 0

@@ -106,6 +106,30 @@ def cmd_terrain_compute(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_exposure_run(args: argparse.Namespace) -> int:
+    from .exposure import index as ex
+    from .exposure import report as rp
+    from .terrain import dem as demmod
+
+    conn = db.connect(args.db)
+    as_of = datetime.strptime(args.as_of, "%Y-%m-%dT%H:%M").replace(tzinfo=UTC)
+    params = ex.ExposureParams(wind_level=args.wind_level, window_hours=args.window_hours)
+    result = ex.route_exposure(conn, args.route, as_of, params, allow_stitched=not args.forecasts_only)
+    ex.store_exposure(conn, result)
+    stamp = as_of.strftime("%Y-%m-%dT%H:%M:%SZ")
+    out = Path(args.out_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    md = rp.render_markdown(conn, args.route, stamp)
+    name = f"{args.route}_{as_of.strftime('%Y%m%dT%H%MZ')}"
+    (out / f"{name}.md").write_text(md)
+    dem_path = demmod.DEFAULT_DEM_DIR / f"{args.route}_mrdem30.tif"
+    if dem_path.exists():
+        rp.exposure_map(conn, args.route, stamp, dem_path, out / f"{name}.png")
+    print(md)
+    print(f"written to {out}/{name}.md")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="mountain", description="Mountain Software research pipeline")
     parser.add_argument("--db", default=str(db.DEFAULT_DB_PATH), help="SQLite database path")
@@ -144,6 +168,18 @@ def build_parser() -> argparse.ArgumentParser:
     tc = terrain.add_parser("compute", help="terrain features and Sx for route points (reads MRDEM-30)")
     tc.add_argument("--route", action="append", help="route_id (repeatable; default all loaded routes)")
     tc.set_defaults(func=cmd_terrain_compute)
+
+    exposure = sub.add_parser("exposure", help="relative exposure to potential wind loading").add_subparsers(
+        dest="action", required=True
+    )
+    er = exposure.add_parser("run", help="B0 and M1 for one route, window ending at --as-of")
+    er.add_argument("--route", required=True)
+    er.add_argument("--as-of", required=True, help="UTC time YYYY-MM-DDTHH:MM (end of the window)")
+    er.add_argument("--window-hours", type=int, default=72)
+    er.add_argument("--wind-level", choices=["700hPa", "10m"], default="700hPa")
+    er.add_argument("--forecasts-only", action="store_true", help="never fall back to stitched archive values")
+    er.add_argument("--out-dir", default="data/processed/reports")
+    er.set_defaults(func=cmd_exposure_run)
     return parser
 
 

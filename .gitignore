@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# Third-party GPX tracks (CalTopo, TrailAmigo, AllTrails, ...): never committed.
+data/routes/third_party/
+# Local working copies of any track that is not cleared for the public repo.
+data/routes/local/
+
+# Raw weather API responses
+data/raw/
+
+# Databases and processed outputs
+*.sqlite
+*.sqlite3
+*.db
+data/processed/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.env
+.env.*
+
+# McKinley's own tracks stay ignored until the privacy check is done.
+# To commit a cleared file, add a line like: !data/routes/own/north_victoria_2026-10-16_strava.gpx
+data/routes/own/*.gpx

@@ -173,6 +173,7 @@ def compare(
     end: datetime,
     product: str = "historical_stitched",
     model: str = om.MODEL,
+    cell_id: int | None = None,
 ) -> list[Comparison]:
     """Station vs model statistics for wind speed, wind direction and temperature.
 
@@ -180,9 +181,11 @@ def compare(
     the station wind is at least 10 km/h (calm directions are noise), using
     the circular difference. Bias = model minus station.
     """
-    cell = conn.execute(
-        "SELECT cell_id FROM station_cells WHERE station_id = ? AND model = ?", (station_id, model)
-    ).fetchone()[0]
+    cell = cell_id
+    if cell is None:
+        cell = conn.execute(
+            "SELECT cell_id FROM station_cells WHERE station_id = ? AND model = ?", (station_id, model)
+        ).fetchone()[0]
     rows = conn.execute(
         """SELECT s.air_temp_c, s.wind_speed_kmh, s.wind_from_deg,
                   f.temperature_2m_c, f.wind_speed_10m_kmh, f.wind_direction_10m_deg,

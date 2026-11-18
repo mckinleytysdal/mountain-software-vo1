@@ -36,6 +36,13 @@ uv run mountain exposure run --route north_victoria --as-of 2026-10-16T06:00   #
 uv run mountain obs load data/observations/<file>.toml                         # Module 5
 ```
 
+See it all in one place (status, findings with evidence, an explorable storm, every decision):
+
+```bash
+uv sync --group app
+uv run streamlit run app/streamlit_app.py
+```
+
 Status against the spec: [`docs/status.md`](docs/status.md). Mini PC notes:
 [`docs/minipc-setup.md`](docs/minipc-setup.md). Parameter sources:
 [`docs/literature.md`](docs/literature.md).

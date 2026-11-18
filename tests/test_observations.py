@@ -45,6 +45,7 @@ def test_template_is_valid():
         ({"sentence": ""}, "sentence"),
         ({"source_type": "other_report"}, "link"),
         ({"published_at": "2026-11-30T09:00:00-07:00"}, "before observed"),
+        ({"forecast_issue": "2026-12-01T10:00:00-07:00"}, "forecast_issue"),
     ],
 )
 def test_bad_entries_rejected(change, msg):
@@ -54,7 +55,7 @@ def test_bad_entries_rejected(change, msg):
 
 def test_bare_date_means_day_precision():
     o = parse_observation(base(observed_at=tomllib.loads("d = 2026-10-16")["d"], time_precision="day"))
-    assert o.observed_at_utc.isoformat() == "2026-10-16T00:00:00+00:00"
+    assert o.observed_at_utc.isoformat() == "2026-10-16T06:00:00+00:00"  # local midnight MDT
 
 
 def test_store_links_nearest_route_point_and_replaces(conn, tmp_path):

@@ -76,7 +76,7 @@ def test_load_all_stores_routes_points_and_sources(conn, routes_dir):
 
     routes = {r["route_id"]: r for r in conn.execute("SELECT * FROM routes")}
     assert routes["timed"]["is_timed"] == 1 and routes["timed"]["thin_interval_s"] == 10
-    assert routes["timed"]["track_date_utc"] == START.date().isoformat()
+    assert routes["timed"]["track_date_local"] == START.date().isoformat()
     assert routes["untimed"]["thin_interval_s"] is None
     assert routes["untimed"]["distance_m"] == pytest.approx(1200, abs=1)
     assert routes["untimed"]["gain_gpx_m"] == pytest.approx(300, abs=1)
@@ -139,3 +139,20 @@ def test_schema_migration_is_idempotent(tmp_path):
     c2 = db.connect(path)
     assert c2.execute("PRAGMA user_version").fetchone()[0] == v1 == len(db.MIGRATIONS)
     assert {"regions", "peaks", "routes", "route_points", "route_sources"} <= db.table_names(c2)
+
+
+def test_unchanged_reload_keeps_downstream_rows(conn, routes_dir):
+    load_all(conn, routes_dir / "manifest.toml")
+    # Pretend later modules attached something to a route point.
+    conn.execute("INSERT INTO weather_cells (model, grid_lat, grid_lon, first_seen_utc) VALUES ('m', 1, 1, 'x')")
+    conn.execute(
+        "INSERT INTO route_point_cells (route_id, seq, model, cell_id, distance_to_cell_m, method_version)"
+        " VALUES ('untimed', 0, 'm', 1, 0, 'v')"
+    )
+    conn.commit()
+    result = load_all(conn, routes_dir / "manifest.toml")
+    assert set(result.unchanged) == {"timed", "untimed"} and not result.loaded
+    assert conn.execute("SELECT COUNT(*) FROM route_point_cells").fetchone()[0] == 1
+    forced = load_all(conn, routes_dir / "manifest.toml", force=True)
+    assert set(forced.loaded) == {"timed", "untimed"}
+    assert conn.execute("SELECT COUNT(*) FROM route_point_cells").fetchone()[0] == 0

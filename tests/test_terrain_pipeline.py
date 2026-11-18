@@ -110,3 +110,12 @@ def test_convergence_is_large_in_the_rockies():
 def test_bbox_with_buffer():
     w, s, e, n = bbox_with_buffer([51.0, 51.1], [-116.2, -116.1], 1000)
     assert s == pytest.approx(51.0 - 0.009, abs=1e-3) and e > -116.1
+
+
+def test_dem_cache_covers_check(tmp_path):
+    p = tmp_path / "c.tif"
+    write_cone_dem(p)
+    with rasterio.open(p, "r+") as dst:
+        dst.update_tags(request_bounds_wgs84="[-116.4, 51.3, -116.2, 51.5]")
+    assert demmod.cached_covers(p, -116.35, 51.35, -116.25, 51.45)
+    assert not demmod.cached_covers(p, -116.5, 51.35, -116.25, 51.45)

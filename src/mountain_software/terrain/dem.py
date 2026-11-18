@@ -87,7 +87,7 @@ def fetch_window(
 
     dem_dir.mkdir(parents=True, exist_ok=True)
     out = dem_dir / f"{name}.tif"
-    if out.exists() and not refresh:
+    if out.exists() and not refresh and cached_covers(out, west, south, east, north):
         return out
     with rasterio.Env(**_gdal_env()), rasterio.open(f"/vsicurl/{url}") as src:
         bounds = transform_bounds("EPSG:4326", src.crs, west, south, east, north)
@@ -112,6 +112,22 @@ def fetch_window(
                 request_bounds_wgs84=json.dumps([west, south, east, north]),
             )
     return out
+
+
+def cached_covers(path: Path, west: float, south: float, east: float, north: float) -> bool:
+    """True when a cached window was requested for a box containing this one.
+
+    If the route changed and now reaches outside the old window, the cache
+    is stale and must be fetched again.
+    """
+    import rasterio
+
+    with rasterio.open(path) as src:
+        tag = src.tags().get("request_bounds_wgs84")
+    if not tag:
+        return False
+    w, s_, e, n = json.loads(tag)
+    return w <= west and s_ <= south and e >= east and n >= north
 
 
 def read_grid(path: Path, meta: dict | None = None) -> DemGrid:

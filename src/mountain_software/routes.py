@@ -17,6 +17,7 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 from . import gpx as gpxmod
 from .geo import elevation_gain_m, path_length_m
@@ -24,6 +25,7 @@ from .sampling import DEFAULT_SPACING_M, RoutePoint, resample
 from .sampling import METHOD_VERSION as SAMPLING_VERSION
 
 DEFAULT_MANIFEST = Path("data/routes/manifest.toml")
+LOCAL_TZ = ZoneInfo("America/Edmonton")
 GAIN_THRESHOLD_M = 3.0
 THIN_INTERVAL_S = 10.0
 # A track counts as "1 Hz-ish" (needs thinning) when its typical gap is
@@ -45,9 +47,14 @@ class ProcessedTrack:
     route_points: list[RoutePoint] = field(default_factory=list)
 
     @property
-    def track_date_utc(self) -> str | None:
+    def track_date_local(self) -> str | None:
+        """Calendar date of the first timed point in Rockies local time.
+
+        A trip that starts at 19:00 MDT is 01:00 UTC the next day; the trip
+        date people use is the local one.
+        """
         times = [p.time_utc for p in self.clean if p.time_utc is not None]
-        return times[0].date().isoformat() if times else None
+        return times[0].astimezone(LOCAL_TZ).date().isoformat() if times else None
 
 
 def process_track(
@@ -155,7 +162,7 @@ def store_route(
     with conn:
         conn.execute("DELETE FROM routes WHERE route_id = ?", (route_id,))
         conn.execute(
-            """INSERT INTO routes (route_id, name, region_id, peak_id, route_shape, track_date_utc,
+            """INSERT INTO routes (route_id, name, region_id, peak_id, route_shape, track_date_local,
                 is_timed, n_points_raw, n_points_clean, n_points_used, distance_raw_m, distance_m,
                 gain_gpx_m, min_ele_gpx_m, max_ele_gpx_m, gain_threshold_m, thin_interval_s,
                 method_version, loaded_at_utc, notes)
@@ -166,7 +173,7 @@ def store_route(
                 entry["region_id"],
                 entry.get("peak_id"),
                 entry["route_shape"],
-                processed.track_date_utc or entry.get("track_date"),
+                processed.track_date_local or entry.get("track_date"),
                 int(t.is_timed),
                 len(t.points),
                 len(processed.clean),
@@ -217,6 +224,7 @@ def store_route(
 class LoadResult:
     loaded: dict[str, ProcessedTrack] = field(default_factory=dict)
     missing: dict[str, Path] = field(default_factory=dict)
+    unchanged: list[str] = field(default_factory=list)
 
 
 def load_all(
@@ -224,8 +232,15 @@ def load_all(
     manifest_path: Path = DEFAULT_MANIFEST,
     routes_dir: Path | None = None,
     spacing_m: float = DEFAULT_SPACING_M,
+    force: bool = False,
 ) -> LoadResult:
-    """Load every track listed in the manifest whose file is present."""
+    """Load every track listed in the manifest whose file is present.
+
+    A route whose file fingerprint and method are unchanged is skipped:
+    reloading would delete its route points and, through the foreign keys,
+    every weather-cell link, terrain row and stored exposure result built on
+    them. ``force`` reloads anyway.
+    """
     manifest = load_manifest(manifest_path)
     routes_dir = routes_dir or manifest_path.parent
     upsert_regions_and_peaks(conn, manifest)
@@ -235,6 +250,15 @@ def load_all(
         if not path.exists():
             result.missing[entry["route_id"]] = path
             continue
+        if not force:
+            row = conn.execute(
+                """SELECT s.file_sha256, r.method_version FROM route_sources s JOIN routes r USING (route_id)
+                   WHERE route_id = ?""",
+                (entry["route_id"],),
+            ).fetchone()
+            if row and row[0] == gpxmod.file_sha256(path) and row[1] == METHOD_VERSION and spacing_m == DEFAULT_SPACING_M:
+                result.unchanged.append(entry["route_id"])
+                continue
         processed = process_track(gpxmod.parse_gpx(path), spacing_m=spacing_m)
         store_route(conn, entry, processed, path)
         result.loaded[entry["route_id"]] = processed

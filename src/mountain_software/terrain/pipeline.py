@@ -138,8 +138,10 @@ def route_terrain(
 
     with conn:
         dem_id = upsert_dem_source(conn, grid)
-        conn.execute("DELETE FROM terrain_features WHERE route_id = ? AND dem_id = ?", (route_id, dem_id))
-        conn.execute("DELETE FROM route_point_sx WHERE route_id = ? AND dem_id = ?", (route_id, dem_id))
+        # Replace every earlier terrain result for this route (any DEM), so a
+        # route never holds two sets of terrain rows.
+        conn.execute("DELETE FROM terrain_features WHERE route_id = ?", (route_id,))
+        conn.execute("DELETE FROM route_point_sx WHERE route_id = ?", (route_id,))
         n_outside = 0
         for r, x, y, cv in zip(pts, xs, ys, conv):
             row, col = grid.rowcol(x, y)

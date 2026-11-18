@@ -32,7 +32,7 @@ import numpy as np
 from ..geo import angular_difference_deg
 
 B0_VERSION = "b0-aspect-v1"
-M1_VERSION = "m1-sx-transport-v3"
+M1_VERSION = "m1-sx-transport-v4"
 
 
 @dataclass(frozen=True)
@@ -44,6 +44,9 @@ class ExposureParams:
     # model surface, which in these valleys rarely exceeds 20 km/h.
     wind_level: str = "700hPa"
     # M1: hourly wind (km/h) below which no snow is assumed to move.
+    # The threshold is applied to ridge-top (700 hPa) wind by default. The
+    # Avalanche Canada classes below describe ridge-top wind, which is why
+    # they fit; Li & Pomeroy is a 10 m surface value, given for comparison.
     # Avalanche Canada: light wind (1-25 km/h) moves little snow; moderate
     # (25-40 km/h) is most conducive to wind slabs. Li & Pomeroy (1997) give
     # 7.7 m/s (28 km/h) mean for dry snow at 10 m over flat ground.
@@ -65,6 +68,7 @@ class ExposureParams:
     # A run is published 1-3 h after its nominal time (Open-Meteo docs for
     # regional models). A run only counts as known once this lag has passed.
     publication_lag_hours: float = 3.0
+    model: str = "gem_hrdps_continental"
 
 
 # ------------------------------------------------------------------ weather
@@ -101,7 +105,12 @@ def best_available_weather(
     lead time available then. This is what someone could have known at
     ``as_of``: no look-ahead. If no such run covers an
     hour and ``allow_stitched`` is True, fall back to the stitched archive
-    value, which is flagged because its issue time is unknown.
+    value, which is flagged because its issue time is unknown. A stitched
+    hour comes from a run issued at or shortly before that hour, so it only
+    counts once ``valid time + publication lag <= as_of``.
+
+    Hours run from just after ``start`` up to ``end`` (start excluded), so a
+    72 h window has 72 values.
     """
     fmt = "%Y-%m-%dT%H:%M:%SZ"
     if wind_level == "700hPa":
@@ -113,7 +122,7 @@ def best_available_weather(
     rows = conn.execute(
         f"""SELECT valid_time_utc, issue_time_utc, {spd}, {dirn}, snowfall_cm
            FROM forecast_snapshots
-           WHERE cell_id = ? AND product = 'single_run' AND valid_time_utc BETWEEN ? AND ? AND issue_time_utc <= ?
+           WHERE cell_id = ? AND product = 'single_run' AND valid_time_utc > ? AND valid_time_utc <= ? AND issue_time_utc <= ?
            ORDER BY valid_time_utc, issue_time_utc DESC""",
         (cell_id, start.strftime(fmt), end.strftime(fmt), (as_of - timedelta(hours=publication_lag_hours)).strftime(fmt)),
     ).fetchall()
@@ -125,8 +134,8 @@ def best_available_weather(
     if allow_stitched:
         for r in conn.execute(
             f"""SELECT valid_time_utc, {spd}, {dirn}, snowfall_cm FROM forecast_snapshots
-               WHERE cell_id = ? AND product = 'historical_stitched' AND valid_time_utc BETWEEN ? AND ?""",
-            (cell_id, start.strftime(fmt), end.strftime(fmt)),
+               WHERE cell_id = ? AND product = 'historical_stitched' AND valid_time_utc > ? AND valid_time_utc <= ?""",
+            (cell_id, start.strftime(fmt), min(end, as_of - timedelta(hours=publication_lag_hours)).strftime(fmt)),
         ):
             best.setdefault(r[0], HourlyWeather(_parse(r[0]), r[1], r[2], r[3], "historical_stitched", None))
     return [best[k] for k in sorted(best)]
@@ -200,11 +209,16 @@ def score_point(
     aspect_deg: float | None,
     sx_by_dir: dict[float, float],
     p: ExposureParams,
+    snow_history: list[HourlyWeather] | None = None,
 ) -> PointResult:
-    """B0 and M1 for one route point over one window of hourly weather."""
+    """B0 and M1 for one route point over one window of hourly weather.
+
+    ``snow_history`` holds the hours before the window, so the fresh-snow
+    memory is complete from the first scored hour.
+    """
     loading = scour = 0.0
     lee_weight = total_weight = 0.0
-    snowfall = [(w.valid_time, w.snowfall_cm or 0.0) for w in weather]
+    snowfall = [(w.valid_time, w.snowfall_cm or 0.0) for w in (snow_history or []) + weather]
     used = stitched = 0
     for w in weather:
         if w.wind_speed_kmh is None or w.wind_from_deg is None:
@@ -288,23 +302,25 @@ def route_exposure(
     """Score every route point for the ``window_hours`` ending at ``as_of``."""
     p = params or ExposureParams()
     start = as_of - timedelta(hours=p.window_hours)
+    dem = conn.execute("SELECT MAX(dem_id) FROM terrain_features WHERE route_id = ?", (route_id,)).fetchone()[0]
     pts = conn.execute(
         """SELECT tf.seq, tf.aspect_true_deg, rpc.cell_id FROM terrain_features tf
-           JOIN route_point_cells rpc ON rpc.route_id = tf.route_id AND rpc.seq = tf.seq
-           WHERE tf.route_id = ? ORDER BY tf.seq""",
-        (route_id,),
+           JOIN route_point_cells rpc ON rpc.route_id = tf.route_id AND rpc.seq = tf.seq AND rpc.model = ?
+           WHERE tf.route_id = ? AND tf.dem_id = ? ORDER BY tf.seq""",
+        (p.model, route_id, dem),
     ).fetchall()
     if not pts:
         raise ValueError(f"route {route_id} needs route points with terrain features and weather cells")
     sx_rows = conn.execute(
-        "SELECT seq, wind_from_true_deg, sx_deg FROM route_point_sx WHERE route_id = ? AND dmax_m = ?",
-        (route_id, p.sx_dmax_m),
+        "SELECT seq, wind_from_true_deg, sx_deg FROM route_point_sx WHERE route_id = ? AND dmax_m = ? AND dem_id = ?",
+        (route_id, p.sx_dmax_m, dem),
     ).fetchall()
     sx: dict[int, dict[float, float]] = {}
     for seq, d, v in sx_rows:
         sx.setdefault(seq, {})[d] = v
 
     weather_cache: dict[int, list[HourlyWeather]] = {}
+    history_cache: dict[int, list[HourlyWeather]] = {}
     results = []
     newest: datetime | None = None
     n_hours = n_stitched = 0
@@ -313,8 +329,12 @@ def route_exposure(
             weather_cache[cell_id] = best_available_weather(
                 conn, cell_id, start, as_of, as_of, allow_stitched, p.publication_lag_hours, p.wind_level
             )
+            history_cache[cell_id] = best_available_weather(
+                conn, cell_id, start - timedelta(hours=p.fresh_snow_hours), start, as_of, allow_stitched,
+                p.publication_lag_hours, p.wind_level,
+            )
         wx = weather_cache[cell_id]
-        r = score_point(wx, aspect, sx.get(seq, {}), p)
+        r = score_point(wx, aspect, sx.get(seq, {}), p, history_cache[cell_id])
         r.seq = seq
         results.append(r)
     for wx in weather_cache.values():

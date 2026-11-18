@@ -66,3 +66,36 @@ def test_scan_writes_one_row_per_day(ready, tmp_path):
     assert len(rows) == 2
     assert (tmp_path / "s.csv").read_text().count("\n") == 3
     assert rows[1]["m1_informative"] is True
+
+
+def test_stitched_fallback_respects_publication_lag(ready, tmp_path):
+    conn = ready
+    api = FakeOpenMeteo()
+    cells = col.cells_for(conn)
+    from datetime import date
+
+    col.fetch_stitched(conn, api, cells, date(2026, 10, 19), date(2026, 10, 19), tmp_path / "raw", sleep=NO_SLEEP)
+    as_of = datetime(2026, 10, 19, 12, tzinfo=UTC)
+    wx = ex.best_available_weather(conn, cells[0].cell_id, datetime(2026, 10, 19, 0, tzinfo=UTC), as_of, as_of)
+    stitched = [w for w in wx if w.product == "historical_stitched"]
+    assert stitched and max(w.valid_time for w in stitched) == datetime(2026, 10, 19, 9, tzinfo=UTC)
+
+
+def test_window_has_exactly_window_hours(ready):
+    conn = ready
+    cell = col.cells_for(conn)[0].cell_id
+    as_of = datetime(2026, 10, 16, 12, tzinfo=UTC)
+    wx = ex.best_available_weather(conn, cell, datetime(2026, 10, 16, 0, tzinfo=UTC), as_of, as_of)
+    assert len(wx) == 12 and wx[0].valid_time == datetime(2026, 10, 16, 1, tzinfo=UTC)
+
+
+def test_snow_before_window_counts():
+    t0 = datetime(2026, 10, 16, 0, tzinfo=UTC)
+    from datetime import timedelta
+
+    history = [ex.HourlyWeather(t0 - timedelta(hours=h), 0.0, 270.0, 2.0, "single_run", t0) for h in range(1, 11)]
+    window = [ex.HourlyWeather(t0 + timedelta(hours=1), 50.0, 270.0, 0.0, "single_run", t0)]
+    p = ex.ExposureParams()
+    with_hist = ex.score_point(window, 90.0, {270.0: 10.0}, p, history)
+    without = ex.score_point(window, 90.0, {270.0: 10.0}, p)
+    assert with_hist.m1_loading > without.m1_loading > 0

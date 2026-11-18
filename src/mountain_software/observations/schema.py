@@ -21,6 +21,9 @@ from dataclasses import dataclass, field
 from datetime import UTC, date, datetime
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
+
+LOCAL_TZ = ZoneInfo("America/Edmonton")
 
 SOURCE_TYPES = ("own_field", "own_trip_report", "min_report", "other_report", "photo", "satellite")
 CONFIDENCE = ("high", "medium", "low")
@@ -106,8 +109,9 @@ def _dt(value: Any, name: str) -> datetime | None:
     if isinstance(value, datetime):
         dt = value
     elif isinstance(value, date):
-        dt = datetime(value.year, value.month, value.day)
-        return dt.replace(tzinfo=UTC)  # a bare date: day precision, stored as 00:00 UTC
+        # A bare date means that local (Rockies) day; store the start of the
+        # local day in UTC. Use time_precision = "day" with it.
+        return datetime(value.year, value.month, value.day, tzinfo=LOCAL_TZ).astimezone(UTC)
     else:
         try:
             dt = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
@@ -201,6 +205,8 @@ def parse_observation(d: dict[str, Any]) -> Observation:
     )
     if obs.published_at_utc and obs.published_at_utc < obs.observed_at_utc and obs.time_precision == "exact":
         raise ObservationError("published_at is before observed_at")
+    if obs.forecast_issue_utc and obs.forecast_issue_utc > obs.observed_at_utc and obs.time_precision == "exact":
+        raise ObservationError("forecast_issue is after observed_at: a forecast cannot be carried before it exists")
     if obs.source_type in ("other_report", "min_report") and not any(e.url for e in obs.evidence):
         raise ObservationError("someone else's report needs a link in evidence (store the link, not a copy)")
     return obs

@@ -242,6 +242,10 @@ MIGRATIONS: list[str] = [
     ALTER TABLE forecast_snapshots ADD COLUMN temperature_700hpa_c REAL;
     ALTER TABLE weather_fetches ADD COLUMN variables TEXT;
     """,
+    # 7: a route's date is the local (Rockies) calendar date, not the UTC one
+    """
+    ALTER TABLE routes RENAME COLUMN track_date_utc TO track_date_local;
+    """,
     # 6: Module 5, observations
     """
     CREATE TABLE observations (

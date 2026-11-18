@@ -13,7 +13,7 @@ from .routes import DEFAULT_MANIFEST, load_all, load_manifest
 
 def cmd_routes_load(args: argparse.Namespace) -> int:
     conn = db.connect(args.db)
-    result = load_all(conn, Path(args.manifest))
+    result = load_all(conn, Path(args.manifest), force=args.force)
     for route_id, p in result.loaded.items():
         print(
             f"{route_id:26s} raw {p.distance_raw_m / 1000:6.2f} km  used {p.distance_m / 1000:6.2f} km  "
@@ -21,6 +21,8 @@ def cmd_routes_load(args: argparse.Namespace) -> int:
             f"points clean {len(p.clean):5d} used {len(p.used):5d}  route points {len(p.route_points):4d}"
             f"{'  (thinned to ~10 s)' if p.thinned else ''}"
         )
+    for route_id in result.unchanged:
+        print(f"{route_id:26s} unchanged (same file and method); use --force to reload")
     for route_id, path in result.missing.items():
         print(f"{route_id:26s} skipped: file not found at {path}")
     return 0
@@ -167,6 +169,7 @@ def build_parser() -> argparse.ArgumentParser:
     routes = sub.add_parser("routes", help="route tracks and route points").add_subparsers(dest="action", required=True)
     load = routes.add_parser("load", help="load every track in the manifest into the database")
     load.add_argument("--manifest", default=str(DEFAULT_MANIFEST))
+    load.add_argument("--force", action="store_true", help="reload even if unchanged (deletes downstream results)")
     load.set_defaults(func=cmd_routes_load)
 
     weather = sub.add_parser("weather", help="weather cells, collection and backfill").add_subparsers(

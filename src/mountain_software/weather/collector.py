@@ -488,8 +488,10 @@ def plan_backfill(manifest: dict[str, Any], today: date) -> list[BackfillJob]:
     """Turn the manifest's backfill settings into concrete date ranges.
 
     "Last N days" means the N whole UTC days ending yesterday. For a single
-    trip date, single runs start the day before, so the forecasts that were
-    available before the trip are included.
+    trip date, single runs cover the day before and the trip day itself, so
+    the forecasts available before the trip are included. Runs issued during
+    the trip are stored too; exposure scoring only uses runs published by its
+    as-of time.
     """
     jobs = []
     region_ids = {r["region_id"] for r in manifest.get("regions", [])}

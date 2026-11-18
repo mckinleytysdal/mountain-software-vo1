@@ -254,3 +254,25 @@ route in SPEC.md is not possible from there. Instead, condition statements
 were drafted from the report text with the exact quote as evidence,
 `confidence = "low"` and `needs_review = true`. They have no coordinates
 until McKinley adds them from his original photos or tracks.
+
+## Fixes after an independent code review (2026-11-18)
+
+**D41.** A review of the branch found two real bugs and several risks. Fixed:
+- Look-ahead: stitched archive values were used right up to the as-of time,
+  although the run behind them was not yet published. They now count only
+  when valid time + 3 h <= as-of. Regression test added.
+- The 72 h fresh-snow memory only saw snow inside the scoring window; it now
+  reads the 72 h before the window too (M1 v4). The window now has exactly
+  72 hourly values (start excluded).
+- Exposure scoring now uses only the newest DEM's terrain rows and the
+  configured weather model.
+- `routes load` skips a route whose file and method are unchanged, because a
+  reload cascades through the foreign keys and deletes weather links, terrain
+  and stored exposure results. `--force` reloads.
+- The cached DEM window is refetched when the route reaches outside it.
+- Route dates and date-only observations use Rockies local time
+  (America/Edmonton), not UTC dates (schema migration 7 renames
+  `track_date_utc` to `track_date_local`).
+- An observation's `forecast_issue` after its observed time is rejected.
+- The threshold applied to 700 hPa wind is intended: Avalanche Canada's wind
+  classes describe ridge-top wind. The station check (next) tests this.

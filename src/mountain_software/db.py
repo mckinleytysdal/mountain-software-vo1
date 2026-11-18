@@ -242,6 +242,46 @@ MIGRATIONS: list[str] = [
     ALTER TABLE forecast_snapshots ADD COLUMN temperature_700hpa_c REAL;
     ALTER TABLE weather_fetches ADD COLUMN variables TEXT;
     """,
+    # 6: Module 5, observations
+    """
+    CREATE TABLE observations (
+        obs_key               TEXT PRIMARY KEY,
+        source_type           TEXT NOT NULL,
+        observer              TEXT NOT NULL,
+        observed_at_utc       TEXT NOT NULL,
+        time_precision        TEXT NOT NULL,
+        published_at_utc      TEXT,
+        confidence            TEXT NOT NULL CHECK (confidence IN ('high', 'medium', 'low')),
+        needs_review          INTEGER NOT NULL CHECK (needs_review IN (0, 1)),
+        peak_id               TEXT,
+        route_id              TEXT,
+        lat                   REAL,
+        lon                   REAL,
+        elev_m                REAL,
+        location_note         TEXT,
+        landform              TEXT NOT NULL,
+        aspect_deg            REAL,
+        nearest_route_id      TEXT,
+        nearest_seq           INTEGER,
+        nearest_distance_m    REAL,
+        wind_effect           TEXT NOT NULL,
+        is_negative           INTEGER NOT NULL CHECK (is_negative IN (0, 1)),
+        fields_json           TEXT NOT NULL,
+        sentence              TEXT NOT NULL,
+        loaded_at_utc         TEXT NOT NULL
+    );
+
+    CREATE TABLE observation_evidence (
+        evidence_id    INTEGER PRIMARY KEY,
+        obs_key        TEXT NOT NULL REFERENCES observations(obs_key) ON DELETE CASCADE,
+        kind           TEXT NOT NULL CHECK (kind IN ('quote', 'link', 'photo')),
+        text           TEXT,
+        url            TEXT,
+        author         TEXT,
+        published      TEXT,
+        note           TEXT
+    );
+    """,
 ]
 
 

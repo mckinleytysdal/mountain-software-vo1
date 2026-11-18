@@ -130,6 +130,21 @@ def cmd_exposure_run(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_obs_load(args: argparse.Namespace) -> int:
+    from .observations.schema import load_file
+    from .observations.store import store_observations
+
+    conn = db.connect(args.db)
+    total = 0
+    for f in args.files:
+        obs = load_file(Path(f))
+        total += store_observations(conn, obs)
+        print(f"{f}: {len(obs)} observations")
+    n = conn.execute("SELECT COUNT(*), SUM(needs_review) FROM observations").fetchone()
+    print(f"database now holds {n[0]} observations ({n[1] or 0} still need review)")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="mountain", description="Mountain Software research pipeline")
     parser.add_argument("--db", default=str(db.DEFAULT_DB_PATH), help="SQLite database path")
@@ -180,6 +195,11 @@ def build_parser() -> argparse.ArgumentParser:
     er.add_argument("--forecasts-only", action="store_true", help="never fall back to stitched archive values")
     er.add_argument("--out-dir", default="data/processed/reports")
     er.set_defaults(func=cmd_exposure_run)
+
+    obs = sub.add_parser("obs", help="field observations").add_subparsers(dest="action", required=True)
+    ol = obs.add_parser("load", help="check and load observation TOML files")
+    ol.add_argument("files", nargs="+")
+    ol.set_defaults(func=cmd_obs_load)
     return parser
 
 

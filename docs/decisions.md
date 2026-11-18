@@ -225,3 +225,32 @@ sensitivity run; the 25 km/h threshold is tied to Avalanche Canada's
 ridge-top wind classes. The MRDEM attribution now credits Copernicus GLO-30,
 as its licence requires. The ±45° leeward window and the TPI radii have no
 published standard; they stay as stated choices.
+
+## Module 5: field template and observations
+
+**D35. Observations are TOML files** (`templates/field_observation.toml` is the
+template), checked by `mountain obs load`. TOML because it is plain text,
+readable on a phone, diff-friendly in git, and Python reads it without a
+package. Each entry is labelled fields plus one plain sentence, as SPEC.md asks.
+
+**D36. Times must carry a time zone** and are stored in UTC. A bare date is
+allowed with `time_precision = "day"`. Observed time and published time are
+separate fields, and a published time before the observed time is refused.
+
+**D37. The main label is `wind_effect`** (loaded, scoured, mixed, none_seen,
+unknown). The landform and aspect fields are on the observation itself, so a
+label can be checked against both the DEM class and the observer's own view.
+
+**D38. Someone else's report must carry a link** (and never a copy of their
+text or photos). A quote is allowed only as evidence for one's own writing.
+
+**D39. Observations link to the nearest route point within 300 m** when they
+have coordinates, so they can be compared with that point's exposure index.
+
+**D40. Summit backfill from McKinley's published trip reports.** The 8
+completed summits are covered by 6 reports on the 11,000ers site. Photo EXIF
+GPS and times are stripped from the site copies, so the "photo times and GPS"
+route in SPEC.md is not possible from there. Instead, condition statements
+were drafted from the report text with the exact quote as evidence,
+`confidence = "low"` and `needs_review = true`. They have no coordinates
+until McKinley adds them from his original photos or tracks.

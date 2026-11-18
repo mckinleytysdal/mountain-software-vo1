@@ -1,0 +1,1694 @@
+# DRAFT: observations extracted from McKinley Tysdal's published trip reports
+# (mckinley-11000ers/src/content/trips/*.md). Low confidence, every entry needs review.
+# Times: MDT (-06:00). published_at unknown, left out.
+
+[[observations]]
+obs_key = "athabasca-01"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-05-18
+time_precision = "day"
+confidence = "low"
+needs_review = true
+peak_id = "athabasca"
+landform = "unknown"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Warm, soft, deep snow on the way up."
+
+[[observations.evidence]]
+kind = "quote"
+text = "We found warm, soft, deep snow on the way up and wet snow on the way down."
+author = "McKinley Tysdal"
+note = "athabasca.md"
+
+[[observations]]
+obs_key = "athabasca-02"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-05-18
+time_precision = "day"
+confidence = "low"
+needs_review = true
+peak_id = "athabasca"
+landform = "unknown"
+surface_type = "wet"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Wet snow on the way down."
+
+[[observations.evidence]]
+kind = "quote"
+text = "We found warm, soft, deep snow on the way up and wet snow on the way down."
+author = "McKinley Tysdal"
+note = "athabasca.md"
+
+[[observations]]
+obs_key = "athabasca-03"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-05-17T19:40:00-06:00
+time_precision = "hour"
+confidence = "low"
+needs_review = true
+peak_id = "athabasca"
+landform = "unknown"
+location_note = "Icefield Parkway parking area"
+air_temp_c = 0
+cloud = "clear"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Clear skies and about 0 °C when leaving the parking area the evening before the climb."
+
+[[observations.evidence]]
+kind = "quote"
+text = "We left the Icefield Parkway parking area the night before under clear skies at about 0 °C."
+author = "McKinley Tysdal"
+note = "athabasca.md"
+
+[[observations]]
+obs_key = "athabasca-04"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-05-17T19:40:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+peak_id = "athabasca"
+landform = "unknown"
+location_note = "Snowcoach Road and lower slopes below the AA Glacier"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Snowcoach Road dry; lower slopes buried under snow with no trail visible."
+
+[[observations.evidence]]
+kind = "quote"
+text = "The Snowcoach Road was dry, but the lower slopes were buried under snow, so there was no trail to follow and we navigated by GPS toward the base of the AA Glacier."
+author = "McKinley Tysdal"
+note = "athabasca.md"
+
+[[observations]]
+obs_key = "athabasca-05"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-05-18T06:30:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+peak_id = "athabasca"
+landform = "unknown"
+location_note = "headwall below the AA Glacier"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Headwall below the AA Glacier mostly filled in with snow."
+
+[[observations.evidence]]
+kind = "quote"
+text = "The headwall below the glacier was mostly filled in with snow, which made the climb to the glacier easier than it is in summer."
+author = "McKinley Tysdal"
+note = "athabasca.md"
+
+[[observations]]
+obs_key = "athabasca-06"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-05-18
+time_precision = "day"
+confidence = "low"
+needs_review = true
+peak_id = "athabasca"
+landform = "unknown"
+visibility = "poor"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Periods of complete whiteout."
+
+[[observations.evidence]]
+kind = "quote"
+text = "There were periods of complete whiteout."
+author = "McKinley Tysdal"
+note = "athabasca.md"
+
+[[observations]]
+obs_key = "athabasca-07"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-05-18
+time_precision = "day"
+confidence = "low"
+needs_review = true
+peak_id = "athabasca"
+landform = "glacier"
+location_note = "AA Glacier"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Soft, deep snow on the glacier; crevasses bridged."
+
+[[observations.evidence]]
+kind = "quote"
+text = "Glacier travel was straightforward on soft, deep snow, and the crevasses were bridged."
+author = "McKinley Tysdal"
+note = "athabasca.md"
+
+[[observations]]
+obs_key = "athabasca-08"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-05-18
+time_precision = "day"
+confidence = "low"
+needs_review = true
+peak_id = "athabasca"
+landform = "unknown"
+location_note = "big slope below the AA Col"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Knee-deep snow on the roughly 45° slope below the AA Col."
+
+[[observations.evidence]]
+kind = "quote"
+text = "The big slope below the AA Col was about 45° with knee-deep snow."
+author = "McKinley Tysdal"
+note = "athabasca.md"
+
+[[observations]]
+obs_key = "athabasca-09"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-05-18
+time_precision = "day"
+confidence = "low"
+needs_review = true
+peak_id = "athabasca"
+landform = "unknown"
+location_note = "slope below the AA Col"
+surface_type = "unknown"
+wind_effect = "unknown"
+bergschrund = "unidentifiable"
+is_negative = false
+sentence = "No identifiable bergschrund below the AA Col."
+
+[[observations.evidence]]
+kind = "quote"
+text = "If there was a bergschrund, it was unidentifiable."
+author = "McKinley Tysdal"
+note = "athabasca.md"
+
+[[observations]]
+obs_key = "athabasca-10"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-05-18
+time_precision = "day"
+confidence = "low"
+needs_review = true
+peak_id = "athabasca"
+landform = "unknown"
+cloud = "heavy, at times"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Periods of heavy cloud cover."
+
+[[observations.evidence]]
+kind = "quote"
+text = "There were periods of heavy cloud cover."
+author = "McKinley Tysdal"
+note = "athabasca.md"
+
+[[observations]]
+obs_key = "athabasca-11"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-05-18T14:30:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+peak_id = "athabasca"
+landform = "ridge"
+location_note = "final ridge beyond Silverhorn"
+surface_type = "firm"
+transport_signs = ["cornices"]
+wind_effect = "unknown"
+is_negative = false
+sentence = "Final summit ridge corniced; snow firm, barely sinking in."
+
+[[observations.evidence]]
+kind = "quote"
+text = "A short dip leads to the final corniced ridge, where we stayed well back from the edge and found the snow firm enough that we barely sank in."
+author = "McKinley Tysdal"
+note = "athabasca.md"
+
+[[observations]]
+obs_key = "athabasca-12"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-05-18T14:30:00-06:00
+time_precision = "hour"
+confidence = "low"
+needs_review = true
+peak_id = "athabasca"
+elev_m = 3491
+landform = "summit"
+cloud = "somewhat clear"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Somewhat clear weather and light wind on the summit."
+
+[[observations.evidence]]
+kind = "quote"
+text = "We reached the summit in somewhat clear weather with a light wind and stayed about 20 minutes."
+author = "McKinley Tysdal"
+note = "athabasca.md"
+
+[[observations]]
+obs_key = "athabasca-13"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-05-18
+time_precision = "day"
+confidence = "low"
+needs_review = true
+peak_id = "athabasca"
+landform = "unknown"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Very deep snow on the descent."
+
+[[observations.evidence]]
+kind = "quote"
+text = "We were very slow because of the very deep snow."
+author = "McKinley Tysdal"
+note = "athabasca.md"
+
+[[observations]]
+obs_key = "athabasca-14"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-05-18T13:00:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+peak_id = "athabasca"
+landform = "unknown"
+location_note = "lower slopes"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Lower slopes heavy and sun-affected by early afternoon."
+
+[[observations.evidence]]
+kind = "quote"
+text = "The lower slopes had turned heavy and sun-affected by early afternoon."
+author = "McKinley Tysdal"
+note = "athabasca.md"
+
+[[observations]]
+obs_key = "athabasca-15"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-05-18
+time_precision = "day"
+confidence = "low"
+needs_review = true
+peak_id = "athabasca"
+landform = "unknown"
+surface_type = "powder"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Good powder and well-filled crevasses."
+
+[[observations.evidence]]
+kind = "quote"
+text = "Athabasca was in good shape for mid-May, with great powder and well-filled crevasses."
+author = "McKinley Tysdal"
+note = "athabasca.md"
+
+[[observations]]
+obs_key = "athabasca-16"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-05-18
+time_precision = "day"
+confidence = "low"
+needs_review = true
+landform = "unknown"
+location_note = "Andromeda's face"
+surface_type = "unknown"
+wind_effect = "unknown"
+avalanche_seen = true
+is_negative = false
+sentence = "Two avalanches seen on Andromeda's face."
+
+[[observations.evidence]]
+kind = "quote"
+text = "Timing matters: the south-facing slopes warm up quickly (we saw two avalanches on Andromeda's face), and the big slope below the col can load up in the afternoon, although we did not encounter that."
+author = "McKinley Tysdal"
+note = "athabasca.md"
+
+[[observations]]
+obs_key = "athabasca-17"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-05-18
+time_precision = "day"
+confidence = "low"
+needs_review = true
+peak_id = "athabasca"
+landform = "unknown"
+location_note = "big slope below the AA Col"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = true
+sentence = "The big slope below the AA Col was not found loaded in the afternoon."
+
+[[observations.evidence]]
+kind = "quote"
+text = "Timing matters: the south-facing slopes warm up quickly (we saw two avalanches on Andromeda's face), and the big slope below the col can load up in the afternoon, although we did not encounter that."
+author = "McKinley Tysdal"
+note = "athabasca.md"
+
+[[observations]]
+obs_key = "hector-01"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-09-19
+time_precision = "day"
+confidence = "low"
+needs_review = true
+peak_id = "hector"
+landform = "glacier"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Hector Glacier well covered; no meaningful crevasse crossings on the way up."
+
+[[observations.evidence]]
+kind = "quote"
+text = "The glacier was well covered and gave a nearly direct line upward without any meaningful crevasse crossings."
+author = "McKinley Tysdal"
+note = "hector.md"
+
+[[observations]]
+obs_key = "hector-02"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-09-19
+time_precision = "day"
+confidence = "low"
+needs_review = true
+peak_id = "hector"
+landform = "glacier"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Roughly 5–20 cm of semi-supportive snow on the ascent; crevasses easy to identify."
+
+[[observations.evidence]]
+kind = "quote"
+text = "Travel was semi-supportive beneath roughly 5–20 cm of snow throughout the ascent, and crevasses were generally easy to identify across the glacier."
+author = "McKinley Tysdal"
+note = "hector.md"
+
+[[observations]]
+obs_key = "hector-03"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-09-19T09:30:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+peak_id = "hector"
+landform = "unknown"
+location_note = "approach to the toe of the Hector Glacier"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Approach dry up to the toe of the glacier."
+
+[[observations.evidence]]
+kind = "quote"
+text = "The approach was dry all the way to the toe of the glacier."
+author = "McKinley Tysdal"
+note = "hector.md"
+
+[[observations]]
+obs_key = "hector-04"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-09-19T09:30:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+peak_id = "hector"
+landform = "glacier"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "About 5 cm of soft snow low on the glacier, about 20 cm near the top."
+
+[[observations.evidence]]
+kind = "quote"
+text = "We found roughly 5 cm of soft snow near the bottom, increasing to around 20 cm near the top."
+author = "McKinley Tysdal"
+note = "hector.md"
+
+[[observations]]
+obs_key = "hector-05"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-09-19T09:30:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+peak_id = "hector"
+landform = "glacier"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Several crevassed sections on the lower glacier; deeper snow and fewer crevasses higher up."
+
+[[observations.evidence]]
+kind = "quote"
+text = "The lower glacier had several crevasse sections to navigate around on both the right and left, while higher up we found deeper snow and significantly fewer crevasses."
+author = "McKinley Tysdal"
+note = "hector.md"
+
+[[observations]]
+obs_key = "hector-06"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-09-19
+time_precision = "day"
+confidence = "low"
+needs_review = true
+peak_id = "hector"
+landform = "unknown"
+location_note = "upper slopes below Hector"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Deeper snow on the upper slopes below the summit."
+
+[[observations.evidence]]
+kind = "quote"
+text = "The upper slopes below Hector were a slog in the deeper snow and cost us a little time."
+author = "McKinley Tysdal"
+note = "hector.md"
+
+[[observations]]
+obs_key = "hector-07"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-09-19
+time_precision = "day"
+confidence = "low"
+needs_review = true
+peak_id = "hector"
+landform = "glacier"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Partial break-through of a small snow bridge, about a foot wide, mid-glacier."
+
+[[observations.evidence]]
+kind = "quote"
+text = "We met no significant difficulties other than partially breaking through a small snow bridge in the middle of the glacier, roughly a foot wide."
+author = "McKinley Tysdal"
+note = "hector.md"
+
+[[observations]]
+obs_key = "hector-08"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-09-19T12:39:00-06:00
+time_precision = "hour"
+confidence = "low"
+needs_review = true
+peak_id = "hector"
+elev_m = 3394
+landform = "summit"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Calm, warm weather on the summit."
+
+[[observations.evidence]]
+kind = "quote"
+text = "We reached the summit of Hector at 12:39 and stayed about an hour, since the weather was calm and warm."
+author = "McKinley Tysdal"
+note = "hector.md"
+
+[[observations]]
+obs_key = "hector-09"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-09-19T12:39:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+peak_id = "hector"
+landform = "unknown"
+location_note = "summit block crux"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "The 1.5 m crux on the summit block was snow-covered rock; conditions manageable."
+
+[[observations.evidence]]
+kind = "quote"
+text = "The crux is about 1.5 m of snow-covered rock, which we scrambled unroped and did not find exposed, and conditions on the summit block were quite manageable, especially with the fixed line."
+author = "McKinley Tysdal"
+note = "hector.md"
+
+[[observations]]
+obs_key = "hector-10"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-09-19T13:37:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+peak_id = "hector"
+landform = "ridge"
+location_note = "Hector–Little Hector ridge"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Minimal snow on the Hector–Little Hector ridge."
+
+[[observations.evidence]]
+kind = "quote"
+text = "Snow coverage on the ridge was minimal and caused no difficulties."
+author = "McKinley Tysdal"
+note = "hector.md"
+
+[[observations]]
+obs_key = "hector-11"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-09-19T15:22:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+peak_id = "hector"
+landform = "unknown"
+location_note = "upper descent from Little Hector"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Upper descent from Little Hector mostly snow-covered scree."
+
+[[observations.evidence]]
+kind = "quote"
+text = "The upper descent was mostly snow-covered scree, steep but fast and effective."
+author = "McKinley Tysdal"
+note = "hector.md"
+
+[[observations]]
+obs_key = "hector-12"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-09-19
+time_precision = "day"
+confidence = "low"
+needs_review = true
+peak_id = "hector"
+landform = "glacier"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Enough glacier coverage, but open crevasses and thin snow bridges remain."
+
+[[observations.evidence]]
+kind = "quote"
+text = "The glacier has enough coverage to make travel relatively straightforward with proper assessment, although open crevasses and thin snow bridges still need attention."
+author = "McKinley Tysdal"
+note = "hector.md"
+
+[[observations]]
+obs_key = "huber-victoria-south-01"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-09-13
+time_precision = "day"
+confidence = "low"
+needs_review = true
+landform = "glacier"
+surface_type = "unknown"
+wind_effect = "unknown"
+bergschrund = "no difficulty crossing"
+is_negative = false
+sentence = "Solid coverage on both glaciers; bergschrunds and crevasses passable."
+
+[[observations.evidence]]
+kind = "quote"
+text = "Both glaciers had solid coverage, and we had no difficulty navigating the bergschrunds or crevasses."
+author = "McKinley Tysdal"
+note = "huber-victoria-south.md"
+
+[[observations]]
+obs_key = "huber-victoria-south-02"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-09-13
+time_precision = "day"
+confidence = "low"
+needs_review = true
+landform = "glacier"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Supportive snow on the glaciers; roughly 5–10 cm of fresh snow on the Huber side."
+
+[[observations.evidence]]
+kind = "quote"
+text = "Supportive snow covered the glacier on both ascents, with roughly 5–10 cm of fresh snow on the Huber side."
+author = "McKinley Tysdal"
+note = "huber-victoria-south.md"
+
+[[observations]]
+obs_key = "huber-victoria-south-03"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-09-13T05:40:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+peak_id = "huber"
+landform = "unknown"
+location_note = "Huber Ledges"
+surface_type = "ice"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Minor verglas on the Huber Ledges, gone by the descent later in the day."
+
+[[observations.evidence]]
+kind = "quote"
+text = "There was a minor amount of verglas on the ledges, but it held the rock together somewhat nicely at the upper ledges and disappeared later in the day on the descent."
+author = "McKinley Tysdal"
+note = "huber-victoria-south.md"
+
+[[observations]]
+obs_key = "huber-victoria-south-04"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-09-13T05:40:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+peak_id = "huber"
+landform = "unknown"
+location_note = "Huber Ledges"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Huber Ledges had nearly no snow."
+
+[[observations.evidence]]
+kind = "quote"
+text = "They had nearly no snow on them."
+author = "McKinley Tysdal"
+note = "huber-victoria-south.md"
+
+[[observations]]
+obs_key = "huber-victoria-south-05"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-09-13T07:00:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+peak_id = "huber"
+landform = "glacier"
+location_note = "Huber upper glacier"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Open crevasses on the upper glacier, with an obvious line through them."
+
+[[observations.evidence]]
+kind = "quote"
+text = "The first glacier is short, and after a short rock scramble at its rear we reached the upper glacier, where we saw an obvious line through the open crevasses on the route to Huber."
+author = "McKinley Tysdal"
+note = "huber-victoria-south.md"
+
+[[observations]]
+obs_key = "huber-victoria-south-06"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-09-13T07:00:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+peak_id = "huber"
+landform = "glacier"
+location_note = "Huber upper glacier"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Many crevasses on the upper glacier; supportive snow."
+
+[[observations.evidence]]
+kind = "quote"
+text = "The upper glacier has many crevasses, but travel was straightforward on supportive snow."
+author = "McKinley Tysdal"
+note = "huber-victoria-south.md"
+
+[[observations]]
+obs_key = "huber-victoria-south-07"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-09-13
+time_precision = "day"
+confidence = "low"
+needs_review = true
+peak_id = "huber"
+landform = "unknown"
+location_note = "Huber summit slope"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Huber summit slope is snow, about 40° at most."
+
+[[observations.evidence]]
+kind = "quote"
+text = "The summit slope is roughly 40° snow at most, with no overly steep terrain, although this changes year to year and season to season."
+author = "McKinley Tysdal"
+note = "huber-victoria-south.md"
+
+[[observations]]
+obs_key = "huber-victoria-south-08"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-09-13
+time_precision = "day"
+confidence = "low"
+needs_review = true
+landform = "glacier"
+location_note = "glacier between Huber and Victoria South"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = true
+sentence = "No crevasses between Huber and Victoria."
+
+[[observations.evidence]]
+kind = "quote"
+text = "We descended the Huber summit slope in about 10 minutes and made our way directly to the base of Victoria, finding no crevasses between the two peaks."
+author = "McKinley Tysdal"
+note = "huber-victoria-south.md"
+
+[[observations]]
+obs_key = "huber-victoria-south-09"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-09-13
+time_precision = "day"
+confidence = "low"
+needs_review = true
+peak_id = "victoria_south"
+landform = "unknown"
+surface_type = "unknown"
+wind_effect = "unknown"
+bergschrund = "crossable in several places"
+is_negative = false
+sentence = "Victoria bergschrund crossable in several places."
+
+[[observations.evidence]]
+kind = "quote"
+text = "The Victoria bergschrund had several places we were comfortable crossing, and we had no difficulties there."
+author = "McKinley Tysdal"
+note = "huber-victoria-south.md"
+
+[[observations]]
+obs_key = "huber-victoria-south-10"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-09-13
+time_precision = "day"
+confidence = "low"
+needs_review = true
+peak_id = "victoria_south"
+landform = "unknown"
+location_note = "Victoria South ascent line past the three rappel stations"
+surface_type = "firm"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Firm snow on the ascent past the three rappel stations."
+
+[[observations.evidence]]
+kind = "quote"
+text = "The snow was firm as we ascended past all three rap stations, and the climb was mostly straightforward plunge-stepping."
+author = "McKinley Tysdal"
+note = "huber-victoria-south.md"
+
+[[observations]]
+obs_key = "huber-victoria-south-11"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-09-13T12:00:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+peak_id = "victoria_south"
+landform = "ridge"
+location_note = "Victoria South summit ridge"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Soft snow covering rock on the Victoria South summit ridge."
+
+[[observations.evidence]]
+kind = "quote"
+text = "The summit ridge had a fair bit of soft snow covering the rock, but neither of us had difficulty navigating it all the way to the summit."
+author = "McKinley Tysdal"
+note = "huber-victoria-south.md"
+
+[[observations]]
+obs_key = "huber-victoria-south-12"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-09-13T12:00:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+peak_id = "victoria_south"
+landform = "ridge"
+location_note = "5.2 block on the summit ridge"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = true
+sentence = "The 5.2 rock block was clear of snow."
+
+[[observations.evidence]]
+kind = "quote"
+text = "The 5.2 block was clear of snow."
+author = "McKinley Tysdal"
+note = "huber-victoria-south.md"
+
+[[observations]]
+obs_key = "huber-victoria-south-13"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-09-13
+time_precision = "day"
+confidence = "low"
+needs_review = true
+peak_id = "victoria_south"
+landform = "unknown"
+surface_type = "unknown"
+wind_effect = "unknown"
+bergschrund = "straightforward to cross"
+is_negative = false
+sentence = "Victoria bergschrund straightforward to cross on the descent."
+
+[[observations.evidence]]
+kind = "quote"
+text = "The bergschrund was again straightforward to cross."
+author = "McKinley Tysdal"
+note = "huber-victoria-south.md"
+
+[[observations]]
+obs_key = "huber-victoria-south-14"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-09-13
+time_precision = "day"
+confidence = "low"
+needs_review = true
+landform = "glacier"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Glacier conditions in good shape."
+
+[[observations.evidence]]
+kind = "quote"
+text = "The route was still very climbable, and glacier conditions are in good shape."
+author = "McKinley Tysdal"
+note = "huber-victoria-south.md"
+
+[[observations]]
+obs_key = "temple-01"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-07-25
+time_precision = "day"
+confidence = "low"
+needs_review = true
+peak_id = "temple"
+landform = "unknown"
+visibility = "smoky"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = true
+sentence = "Route dry and snow-free; cool, smoky weather."
+
+[[observations.evidence]]
+kind = "quote"
+text = "We found the route completely dry and snow-free, with cool, smoky weather."
+author = "McKinley Tysdal"
+note = "temple.md"
+
+[[observations]]
+obs_key = "temple-02"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-07-25T08:00:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+peak_id = "temple"
+landform = "unknown"
+location_note = "Larch Valley trail to Sentinel Pass"
+visibility = "smoky"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Dry trail; smoky view of the Ten Peaks."
+
+[[observations.evidence]]
+kind = "quote"
+text = "The trail was dry and in great shape, and we had a smoky but pretty view of the Ten Peaks for much of the climb."
+author = "McKinley Tysdal"
+note = "temple.md"
+
+[[observations]]
+obs_key = "temple-03"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-07-25
+time_precision = "day"
+confidence = "low"
+needs_review = true
+peak_id = "temple"
+landform = "unknown"
+location_note = "upper route crux area"
+surface_type = "rock"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Dry rock on the upper route."
+
+[[observations.evidence]]
+kind = "quote"
+text = "The rock was dry and the scrambling was straightforward."
+author = "McKinley Tysdal"
+note = "temple.md"
+
+[[observations]]
+obs_key = "temple-04"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-07-25T12:38:00-06:00
+time_precision = "hour"
+confidence = "low"
+needs_review = true
+peak_id = "temple"
+elev_m = 3543
+landform = "summit"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Ominous weather and strong wind on the summit; no signs of thunderstorms."
+
+[[observations.evidence]]
+kind = "quote"
+text = "We reached the summit in ominous weather with a strong wind, though there were no signs of thunderstorms."
+author = "McKinley Tysdal"
+note = "temple.md"
+
+[[observations]]
+obs_key = "temple-05"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-07-25T12:38:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+peak_id = "temple"
+landform = "ridge"
+location_note = "summit ridge"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = true
+sentence = "Summit ridge bare of snow."
+
+[[observations.evidence]]
+kind = "quote"
+text = "The ridge was bare of snow, and we stayed about 60 minutes."
+author = "McKinley Tysdal"
+note = "temple.md"
+
+[[observations]]
+obs_key = "temple-06"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-07-25T15:50:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+peak_id = "temple"
+landform = "unknown"
+location_note = "Larch Valley"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Warm afternoon sun in Larch Valley."
+
+[[observations.evidence]]
+kind = "quote"
+text = "From the pass we dropped through Larch Valley in warm afternoon sun and enjoyed the hike back to the Moraine Lake parking area."
+author = "McKinley Tysdal"
+note = "temple.md"
+
+[[observations]]
+obs_key = "temple-07"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-07-25
+time_precision = "day"
+confidence = "low"
+needs_review = true
+peak_id = "temple"
+landform = "unknown"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = true
+sentence = "No snow or ice on the route."
+
+[[observations.evidence]]
+kind = "quote"
+text = "Temple was in excellent dry condition, with no snow or ice on the route and mostly easy scrambling with a few exposed moves if you would like to do them."
+author = "McKinley Tysdal"
+note = "temple.md"
+
+[[observations]]
+obs_key = "victoria-north-01"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-10-16T07:45:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+peak_id = "victoria_north"
+route_id = "north_victoria"
+landform = "unknown"
+location_note = "climber's trail to the toe of Victoria Glacier"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "A little snow and ice on the trail up to the glacier."
+
+[[observations.evidence]]
+kind = "quote"
+text = "There was a little snow and ice on the trail, but travel was as good as we had hoped."
+author = "McKinley Tysdal"
+note = "victoria-north.md"
+
+[[observations]]
+obs_key = "victoria-north-02"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-10-16T07:45:00-06:00
+time_precision = "hour"
+confidence = "low"
+needs_review = true
+peak_id = "victoria_north"
+route_id = "north_victoria"
+landform = "unknown"
+location_note = "below the toe of Victoria Glacier"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = true
+sentence = "No meaningful snow below the toe of the glacier."
+
+[[observations.evidence]]
+kind = "quote"
+text = "We did not hit any meaningful snow until we reached the toe of the glacier at 7:45, where we transitioned into boots, crampons, and glacier gear and continued up."
+author = "McKinley Tysdal"
+note = "victoria-north.md"
+
+[[observations]]
+obs_key = "victoria-north-03"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-10-16T07:45:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+peak_id = "victoria_north"
+route_id = "north_victoria"
+landform = "glacier"
+location_note = "Victoria Glacier"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Generally supportive snow on the glacier, with a few crevassed sections."
+
+[[observations.evidence]]
+kind = "quote"
+text = "Travel on the glacier was straightforward on generally supportive snow as we threaded through a few crevassed sections to the headwall."
+author = "McKinley Tysdal"
+note = "victoria-north.md"
+
+[[observations]]
+obs_key = "victoria-north-04"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-10-16T07:45:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+peak_id = "victoria_north"
+route_id = "north_victoria"
+landform = "glacier"
+location_note = "Victoria Glacier"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Numerous crevasses, well bridged along the line."
+
+[[observations.evidence]]
+kind = "quote"
+text = "The crevasses were numerous but well bridged along our line, and we crossed two or three snow bridges."
+author = "McKinley Tysdal"
+note = "victoria-north.md"
+
+[[observations]]
+obs_key = "victoria-north-05"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-10-16
+time_precision = "day"
+confidence = "low"
+needs_review = true
+peak_id = "victoria_north"
+route_id = "north_victoria"
+landform = "unknown"
+location_note = "headwall below the Victoria/Collier col"
+surface_type = "unknown"
+wind_effect = "unknown"
+bergschrund = "opening present; avoided on the right"
+is_negative = false
+sentence = "Bergschrund opening at the headwall avoided by staying right."
+
+[[observations.evidence]]
+kind = "quote"
+text = "By staying to the right of the opening we avoided a bergschrund crossing, then made a traverse of a couple hundred metres."
+author = "McKinley Tysdal"
+note = "victoria-north.md"
+
+[[observations]]
+obs_key = "victoria-north-06"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-10-16T10:45:00-06:00
+time_precision = "hour"
+confidence = "low"
+needs_review = true
+peak_id = "victoria_north"
+route_id = "north_victoria"
+landform = "col"
+location_note = "Victoria/Collier col"
+surface_type = "firm"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Firm snow and easy rock up to the Victoria/Collier col."
+
+[[observations.evidence]]
+kind = "quote"
+text = "Conditions were firm snow and some easy class 3 rock, and we reached the col around 10:45."
+author = "McKinley Tysdal"
+note = "victoria-north.md"
+
+[[observations]]
+obs_key = "victoria-north-07"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-10-16T10:45:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+peak_id = "victoria_north"
+route_id = "north_victoria"
+landform = "unknown"
+location_note = "traverse under the large rock pillar above the col"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Brittle ice under a few cm of soft snow on the traverse; semi-supportive snow a little lower."
+
+[[observations.evidence]]
+kind = "quote"
+text = "Brittle glacier ice was hidden under a few centimetres of soft snow, and we considered simul-climbing, but a little lower we found a line of semi-supportive snow."
+author = "McKinley Tysdal"
+note = "victoria-north.md"
+
+[[observations]]
+obs_key = "victoria-north-08"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-10-16T11:50:00-06:00
+time_precision = "hour"
+confidence = "low"
+needs_review = true
+peak_id = "victoria_north"
+route_id = "north_victoria"
+elev_m = 3388
+landform = "summit"
+visibility = "good"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Great visibility and relatively low wind on the summit."
+
+[[observations.evidence]]
+kind = "quote"
+text = "We stood on North Victoria just before noon in great visibility and relatively low wind, took a short break, and started down."
+author = "McKinley Tysdal"
+note = "victoria-north.md"
+
+[[observations]]
+obs_key = "victoria-north-09"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-10-16T12:30:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+peak_id = "victoria_north"
+route_id = "north_victoria"
+landform = "unknown"
+surface_type = "mixed"
+wind_effect = "unknown"
+is_negative = false
+sentence = "On the descent: firm snow, near-bare ice, rotten ice and very soft snow."
+
+[[observations.evidence]]
+kind = "quote"
+text = "Conditions varied a lot on the way down, from firm snow and near-bare ice to rotten ice and very soft snow."
+author = "McKinley Tysdal"
+note = "victoria-north.md"
+
+[[observations]]
+obs_key = "victoria-north-10"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-10-16T13:00:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+peak_id = "victoria_north"
+route_id = "north_victoria"
+landform = "unknown"
+location_note = "below the col, headwall traverse and glacier"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Snow much softer in the afternoon than in the morning."
+
+[[observations.evidence]]
+kind = "quote"
+text = "The snow had softened considerably since the morning, so we kick-stepped deliberately to keep secure footing."
+author = "McKinley Tysdal"
+note = "victoria-north.md"
+
+[[observations]]
+obs_key = "woolley-diadem-01"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-10-03T04:00:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+landform = "unknown"
+location_note = "Woolley Creek approach"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Approach trail and rock firm and sometimes icy."
+
+[[observations.evidence]]
+kind = "quote"
+text = "The trail and rock were firm and sometimes icy, and we stuck to the creek bed for most of the ascent."
+author = "McKinley Tysdal"
+note = "woolley-diadem.md"
+
+[[observations]]
+obs_key = "woolley-diadem-02"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-10-03T07:30:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+landform = "glacier"
+location_note = "glacier above the bivy site"
+surface_type = "mixed"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Glacier a mix of firm snow and ice, with thigh-deep snow in places."
+
+[[observations.evidence]]
+kind = "quote"
+text = "The glacier was a mix of firm snow patches and ice, with sections where the snow was up to our thighs."
+author = "McKinley Tysdal"
+note = "woolley-diadem.md"
+
+[[observations]]
+obs_key = "woolley-diadem-03"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-10-03T07:30:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+landform = "glacier"
+location_note = "glacier above the bivy site"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Deep snow and a heavily fractured glacier."
+
+[[observations.evidence]]
+kind = "quote"
+text = "Deep snow and a heavily fractured glacier made travel slower and more involved, although that was somewhat expected at this time of year."
+author = "McKinley Tysdal"
+note = "woolley-diadem.md"
+
+[[observations]]
+obs_key = "woolley-diadem-04"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-10-03
+time_precision = "day"
+confidence = "low"
+needs_review = true
+peak_id = "diadem"
+landform = "unknown"
+location_note = "approach to the base of the Diadem SE couloir"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Thin layer of snow over rock toward the base of the couloir."
+
+[[observations.evidence]]
+kind = "quote"
+text = "Travel toward the base of the couloir was fairly efficient, with just a small layer of snow over rock."
+author = "McKinley Tysdal"
+note = "woolley-diadem.md"
+
+[[observations]]
+obs_key = "woolley-diadem-05"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-10-03
+time_precision = "day"
+confidence = "low"
+needs_review = true
+peak_id = "diadem"
+landform = "couloir_gully"
+location_note = "Diadem SE couloir"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "A deep avalanche path runs down most of the couloir."
+
+[[observations.evidence]]
+kind = "quote"
+text = "A deep avalanche path runs down most of the couloir, so we stuck to the high points to look for firmer conditions."
+author = "McKinley Tysdal"
+note = "woolley-diadem.md"
+
+[[observations]]
+obs_key = "woolley-diadem-06"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-10-03
+time_precision = "day"
+confidence = "low"
+needs_review = true
+peak_id = "diadem"
+landform = "couloir_gully"
+location_note = "Diadem SE couloir"
+surface_type = "mixed"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Firm snow, ice and deep snow in the couloir to the top."
+
+[[observations.evidence]]
+kind = "quote"
+text = "The ascent was firm snow, ice, and deep snow all the way to the top."
+author = "McKinley Tysdal"
+note = "woolley-diadem.md"
+
+[[observations]]
+obs_key = "woolley-diadem-07"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-10-03
+time_precision = "day"
+confidence = "low"
+needs_review = true
+peak_id = "diadem"
+landform = "couloir_gully"
+location_note = "top of the Diadem SE couloir"
+surface_type = "unknown"
+transport_signs = ["cornices"]
+wind_effect = "unknown"
+is_negative = false
+sentence = "Overhanging cornice of about 1.5 m at the top of the couloir."
+
+[[observations.evidence]]
+kind = "quote"
+text = "Near the top of our line we met a roughly 50–55° section with an overhanging cornice of about 1.5 m (5 ft)."
+author = "McKinley Tysdal"
+note = "woolley-diadem.md"
+
+[[observations]]
+obs_key = "woolley-diadem-08"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-10-03T13:00:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+peak_id = "diadem"
+landform = "unknown"
+location_note = "below the Diadem summit rock step"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Wind-affected snow between the couloir top and the summit rock step."
+
+[[observations.evidence]]
+kind = "quote"
+text = "From there we traversed wind-affected snow to the rock step to gain the summit."
+author = "McKinley Tysdal"
+note = "woolley-diadem.md"
+
+[[observations]]
+obs_key = "woolley-diadem-09"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-10-03T15:00:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+peak_id = "diadem"
+landform = "unknown"
+location_note = "Diadem to the Diadem–Woolley col"
+surface_type = "mixed"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Mix of scree and snow on the descent from Diadem to the col."
+
+[[observations.evidence]]
+kind = "quote"
+text = "We took the line down to the col that made the most sense to us, a mix of scree and snow."
+author = "McKinley Tysdal"
+note = "woolley-diadem.md"
+
+[[observations]]
+obs_key = "woolley-diadem-10"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-10-03T16:30:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+peak_id = "woolley"
+landform = "ridge"
+location_note = "ridge from the col to Woolley"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Decent snow travel on the ridge from the col to Woolley."
+
+[[observations.evidence]]
+kind = "quote"
+text = "Apart from one steep, exposed section on the ridge, it was relatively easy with decent snow travel."
+author = "McKinley Tysdal"
+note = "woolley-diadem.md"
+
+[[observations]]
+obs_key = "woolley-diadem-11"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-10-03T16:30:00-06:00
+time_precision = "hour"
+confidence = "low"
+needs_review = true
+peak_id = "woolley"
+elev_m = 3405
+landform = "summit"
+visibility = "good"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Perfect visibility on the Woolley summit."
+
+[[observations.evidence]]
+kind = "quote"
+text = "We summited Woolley in perfect visibility, then descended to the col, arriving around 17:30."
+author = "McKinley Tysdal"
+note = "woolley-diadem.md"
+
+[[observations]]
+obs_key = "woolley-diadem-12"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-10-03T17:30:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+peak_id = "woolley"
+landform = "glacier"
+location_note = "Woolley Glacier"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Woolley Glacier extremely crevassed."
+
+[[observations.evidence]]
+kind = "quote"
+text = "The Woolley Glacier is extremely crevassed, and navigation is difficult, to say the least."
+author = "McKinley Tysdal"
+note = "woolley-diadem.md"
+
+[[observations]]
+obs_key = "woolley-diadem-13"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-10-03
+time_precision = "day"
+confidence = "low"
+needs_review = true
+peak_id = "woolley"
+landform = "glacier"
+location_note = "Woolley Glacier bergschrund"
+surface_type = "unknown"
+wind_effect = "unknown"
+bergschrund = "one snow bridge"
+is_negative = false
+sentence = "One snow bridge across the bergschrund near the bottom of the Woolley Glacier."
+
+[[observations.evidence]]
+kind = "quote"
+text = "Near the bottom we reached the bergschrund, which had one snow bridge across it."
+author = "McKinley Tysdal"
+note = "woolley-diadem.md"
+
+[[observations]]
+obs_key = "woolley-diadem-14"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-10-03
+time_precision = "day"
+confidence = "low"
+needs_review = true
+peak_id = "woolley"
+landform = "glacier"
+location_note = "Woolley Glacier"
+surface_type = "mixed"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Bare ice, firm snow and knee-deep snow on the Woolley Glacier descent."
+
+[[observations.evidence]]
+kind = "quote"
+text = "Conditions varied significantly, from bare ice and firm snow to knee-deep snow."
+author = "McKinley Tysdal"
+note = "woolley-diadem.md"
+
+[[observations]]
+obs_key = "woolley-diadem-15"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-10-03
+time_precision = "day"
+confidence = "low"
+needs_review = true
+peak_id = "woolley"
+landform = "glacier"
+location_note = "Woolley Glacier"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "A climber broke into a crevasse to chest height on the Woolley Glacier."
+
+[[observations.evidence]]
+kind = "quote"
+text = "At one point Ferran punched into a crevasse to roughly chest height but stopped himself with help from the rope."
+author = "McKinley Tysdal"
+note = "woolley-diadem.md"
+
+[[observations]]
+obs_key = "woolley-diadem-16"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-10-03T20:30:00-06:00
+time_precision = "part_of_day"
+confidence = "low"
+needs_review = true
+landform = "unknown"
+location_note = "Woolley Creek, bivy site to the river"
+surface_type = "ice"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Rock extremely icy and parts of the trail frozen on the way out."
+
+[[observations.evidence]]
+kind = "quote"
+text = "The way out was more awkward than the morning approach: the rock was extremely icy, parts of the trail were frozen, and tired bodies on slick rock made it frustrating."
+author = "McKinley Tysdal"
+note = "woolley-diadem.md"
+
+[[observations]]
+obs_key = "woolley-diadem-17"
+source_type = "own_trip_report"
+observer = "McKinley Tysdal"
+observed_at = 2026-10-03
+time_precision = "day"
+confidence = "low"
+needs_review = true
+landform = "unknown"
+surface_type = "unknown"
+wind_effect = "unknown"
+is_negative = false
+sentence = "Early-winter conditions with deep snow."
+
+[[observations.evidence]]
+kind = "quote"
+text = "The route was in challenging early-winter conditions, with deep snow and complex glacier navigation the biggest factors all day."
+author = "McKinley Tysdal"
+note = "woolley-diadem.md"

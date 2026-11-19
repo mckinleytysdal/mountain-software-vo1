@@ -10,9 +10,9 @@ from pathlib import Path
 
 TEMPLATE = Path("src/mountain_software/viewer/page_template.html")
 
-# Recorded result (docs/stations.md): height-blended wind vs Bosworth Upper,
-# 2026-08-20 to 2026-11-17, 2,160 hours, provisional nearest-cell values.
-BLEND_STATION = {"model_mean": 20.8, "bias": -3.6, "mae": 7.2, "corr": 0.79}
+# Recorded result (docs/stations.md): height-blended wind vs Bosworth Upper on
+# its own HRDPS cell, 2026-08-20 to 2026-11-17, 2,160 hours.
+BLEND_STATION = {"model_mean": 24.9, "bias": 0.6, "mae": 6.5, "corr": 0.82}
 
 
 def main() -> None:

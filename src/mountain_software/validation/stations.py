@@ -157,6 +157,10 @@ class Comparison:
     station_mean: float | None
     model_mean: float | None
     note: str = ""
+    # For wind speed rows: hours at or above the transport threshold.
+    station_hours_over: int | None = None
+    model_hours_over: int | None = None
+    both_hours_over: int | None = None
 
 
 def _stats(obs: list[float], mod: list[float]) -> tuple:
@@ -174,6 +178,7 @@ def compare(
     product: str = "historical_stitched",
     model: str = om.MODEL,
     cell_id: int | None = None,
+    threshold_kmh: float = 25.0,
 ) -> list[Comparison]:
     """Station vs model statistics for wind speed, wind direction and temperature.
 
@@ -189,16 +194,28 @@ def compare(
     rows = conn.execute(
         """SELECT s.air_temp_c, s.wind_speed_kmh, s.wind_from_deg,
                   f.temperature_2m_c, f.wind_speed_10m_kmh, f.wind_direction_10m_deg,
-                  f.wind_speed_700hpa_kmh, f.wind_direction_700hpa_deg, f.temperature_700hpa_c
+                  f.wind_speed_700hpa_kmh, f.wind_direction_700hpa_deg, f.temperature_700hpa_c,
+                  f.geopotential_height_700hpa_m
            FROM station_obs s JOIN forecast_snapshots f
              ON f.valid_time_utc = s.valid_time_utc AND f.cell_id = ? AND f.product = ? AND f.model = ?
            WHERE s.station_id = ? AND s.valid_time_utc >= ? AND s.valid_time_utc <= ?""",
         (cell, product, model, station_id, start.strftime("%Y-%m-%dT%H:%M:%SZ"), end.strftime("%Y-%m-%dT%H:%M:%SZ")),
     ).fetchall()
+    from ..exposure.index import HourlyWeather, blend_for_height
+
+    z_station = conn.execute("SELECT elev_m FROM stations WHERE station_id = ?", (station_id,)).fetchone()[0]
+    z_cell = conn.execute("SELECT model_elev_m FROM weather_cells WHERE cell_id = ?", (cell,)).fetchone()[0]
+    blended = []
+    for r in rows:
+        w = HourlyWeather(datetime.min, None, None, None, product, None, r[4], r[5], r[6], r[7], r[9])
+        b = blend_for_height([w], z_station, z_cell)[0]
+        blended.append((b.wind_speed_kmh, b.wind_from_deg))
+    rows = [tuple(r) + bl for r, bl in zip(rows, blended)]  # index 10 = blend speed, 11 = blend direction
     out = []
     pairs = {
         ("wind_speed_kmh", "wind_speed_10m_kmh"): (1, 4),
         ("wind_speed_kmh", "wind_speed_700hpa_kmh"): (1, 6),
+        ("wind_speed_kmh", "blend_by_height_kmh"): (1, 10),
         ("air_temp_c", "temperature_2m_c"): (0, 3),
         ("air_temp_c", "temperature_700hpa_c"): (0, 8),
     }
@@ -207,8 +224,13 @@ def compare(
         if not ok:
             out.append(Comparison(station_id, sv, mv, 0, None, None, None, None, None, None))
             continue
-        out.append(Comparison(station_id, sv, mv, len(ok), *_stats([a for a, _ in ok], [b for _, b in ok])))
-    for mv, (k, j) in {"wind_direction_10m_deg": (2, 5), "wind_direction_700hpa_deg": (2, 7)}.items():
+        c = Comparison(station_id, sv, mv, len(ok), *_stats([a for a, _ in ok], [b for _, b in ok]))
+        if sv == "wind_speed_kmh":
+            c.station_hours_over = sum(a >= threshold_kmh for a, _ in ok)
+            c.model_hours_over = sum(b >= threshold_kmh for _, b in ok)
+            c.both_hours_over = sum(a >= threshold_kmh and b >= threshold_kmh for a, b in ok)
+        out.append(c)
+    for mv, (k, j) in {"wind_direction_10m_deg": (2, 5), "wind_direction_700hpa_deg": (2, 7), "blend_direction_deg": (2, 11)}.items():
         ok = [(r[k], r[j]) for r in rows if r[k] is not None and r[j] is not None and (r[1] or 0) >= 10]
         diffs = [angular_difference_deg(a, b) for a, b in ok]
         out.append(Comparison(

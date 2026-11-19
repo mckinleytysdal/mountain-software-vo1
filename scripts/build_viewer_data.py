@@ -33,6 +33,8 @@ def main() -> None:
         "weather_db": str(Path(a.main_db if wx_source is main_db else a.research_db).name),
         "observations": vd.observations_summary(main_db),
         "station": vd.station_summary(wx_source),
+        "stations": {str(sid): vd.station_summary(wx_source, sid) for sid in (111, 129, 1)},
+        "station_names": {"111": "Bosworth Upper (2,745 m)", "129": "Tangle Ridge (3,009 m)", "1": "Burstall Pass (2,300 m)"},
         "scan": vd.scan_series(Path("data/processed/reports")),
         "exposure": {"route_id": a.route, "as_of": a.as_of, "points": vd.exposure_points(wx_source, a.route, a.as_of)},
         "window_weather": vd.window_weather(wx_source, a.route, a.as_of),

@@ -126,7 +126,7 @@ a { color: var(--ice); }
       <div class="sub">What I need from you</div>
       <ol class="need">
         <li>On your next trips, one line per notable slope: where, when, and whether wind <b>added</b> snow (pillowy, slab, fresh cornice) or <b>stripped</b> it (hard, rippled, rock showing). Use <span class="mono">templates/field_observation.toml</span>, or just write the sentence and I will convert it.</li>
-        <li>Nothing else is blocking. Weather for Icefield and Burstall downloads tonight when the free weather API resets.</li>
+        <li>Nothing else is blocking. All three regions now have weather data and real model cells.</li>
       </ol>
     </div>
   </div>
@@ -215,23 +215,24 @@ uv run mountain exposure run --route north_victoria --as-of 2026-11-09T18:00</pr
   // ---- findings
   const st = Object.fromEntries(D.station.map(c => [c.model_variable, c]));
   const s10 = st.wind_speed_10m_kmh || {}, s700 = st.wind_speed_700hpa_kmh || {};
-  const blend = D.blend_station;
+  const blend = st.blend_by_height_kmh || D.blend_station;
+  const hrs = (c) => c && c.station_hours_over != null ? `${fmt(c.both_hours_over)} of ${fmt(c.station_hours_over)}${c.model_hours_over - c.both_hours_over ? ` (+${fmt(c.model_hours_over - c.both_hours_over)} false)` : ""}` : "–";
   const findings = [
     {
       claim: "The weather model's 10 m wind badly under-reads the wind on ridges.",
-      conf: "high", tags: ["evidence: 2,160 hours", "1 station"],
-      body: `At Bosworth Upper, a Parks Canada ridge-top station at 2,745 m about 10 km from North Victoria, measured wind averaged <b>${fmt(s10.station_mean,1)} km/h</b> over 90 days. The model's 10 m wind for the same hours averaged <b>${fmt(s10.model_mean,1)} km/h</b> and never reached 25 km/h, while the station passed 25 km/h in 921 hours. The model's ground sits about 600 m below the station (2,168 m), so its "10 m wind" is wind over a smoothed valley, not a ridge.`,
+      conf: "high", tags: ["evidence: 90 days", "2 ridge stations"],
+      body: `At Bosworth Upper, a Parks Canada ridge-top station at 2,745 m about 10 km from North Victoria, measured wind averaged <b>${fmt(s10.station_mean,1)} km/h</b> over 90 days. The model's 10 m wind for the same hours averaged <b>${fmt(s10.model_mean,1)} km/h</b> and never reached 25 km/h, while the station passed 25 km/h in ${fmt(s10.station_hours_over)} hours. Tangle Ridge (3,009 m, near the Columbia Icefield) shows the same: 10 m model wind never reached 25 km/h there either. The model's ground sits 800–850 m below these ridges, so its "10 m wind" is wind over a smoothed valley, not a ridge.`,
       chart: "speed",
-      change: "If the same comparison at Tangle Ridge and Burstall Pass (tonight) shows 10 m wind close to measured wind, this is local to Bosworth.",
+      change: "A ridge station where 10 m model wind matches measured wind. None so far.",
       caveat: s10.cell_note
     },
     {
       claim: "Mixing 10 m and ridge-height (700 hPa) wind by each point's height is the best wind to drive the index.",
-      conf: "medium", tags: ["evidence: 2,160 hours", "1 station", "used in M1 v5"],
-      body: `Ridge-height wind alone was close to the station (bias ${fmt(s700.bias,1)} km/h, typical error ${fmt(s700.mae,1)} km/h, correlation ${fmt(s700.corr,2)}). Blending the two by height had the smallest typical error (${fmt(blend.mae,1)} km/h, correlation ${fmt(blend.corr,2)}) and stops valley-floor points from getting ridge-top wind. With ridge wind alone, gullies by Lake Louise ranked highest on 9 November, which makes no physical sense.`,
+      conf: "high", tags: ["evidence: 90 days", "3 stations", "used in M1 v5"],
+      body: `At Bosworth Upper, ridge-height (700 hPa) wind alone ran high (bias +${fmt(s700.bias,1)} km/h, typical error ${fmt(s700.mae,1)}). Blending 10 m and ridge-height wind by the station's height cut the typical error to <b>${fmt(blend.mae,1)} km/h</b> with almost no bias (${fmt(blend.bias,1)}). The blend was also best at Tangle Ridge, and at the sheltered Burstall Pass station, which sits below the model's ground, it falls back to 10 m wind by itself, where 700 hPa wind would be 28 km/h too strong. It also stops valley-floor points from getting ridge-top wind.`,
       table: true,
-      change: "A second or third station with lower error from pure 700 hPa wind, or field labels that the 700 hPa version predicts better.",
-      caveat: "Wind direction was matched better by 10 m wind (52° average difference) than by 700 hPa wind (63°), probably because the ridge steers the local flow. The 'hybrid' option exists to test this."
+      change: "Field labels that a different wind source predicts better.",
+      caveat: "The blend still over-reads Tangle Ridge by about 7 km/h. Direction: 700 hPa direction matched Tangle Ridge far better than 10 m (25° vs 83° average difference); at Bosworth both were about 60°. So 10 m direction is not used."
     },
     {
       claim: "Which wind drives the index matters far more than any other setting.",
@@ -288,10 +289,10 @@ uv run mountain exposure run --route north_victoria --as-of 2026-11-09T18:00</pr
   }
   function stationTable(host) {
     host.innerHTML = `<div class="tbl"><table><thead><tr><th>Model wind</th><th class="n">Bias</th><th class="n">Typical error</th><th class="n">Correlation</th><th class="n">Hours ≥ 25 km/h caught</th></tr></thead><tbody>
-      <tr><td>10 m</td><td class="n">${fmt(s10.bias,1)}</td><td class="n">${fmt(s10.mae,1)}</td><td class="n">${fmt(s10.corr,2)}</td><td class="n">0 of 921</td></tr>
-      <tr><td>700 hPa (ridge height)</td><td class="n">+${fmt(s700.bias,1)}</td><td class="n">${fmt(s700.mae,1)}</td><td class="n">${fmt(s700.corr,2)}</td><td class="n">802 of 921 (+296 false)</td></tr>
-      <tr class="hl"><td>Blend by height (used)</td><td class="n">${fmt(blend.bias,1)}</td><td class="n">${fmt(blend.mae,1)}</td><td class="n">${fmt(blend.corr,2)}</td><td class="n">586 of 921 (+106 false)</td></tr>
-      </tbody></table></div><p class="chart-note">km/h. Bias = model minus station. Typical error = mean absolute error.</p>`;
+      ${Object.entries(D.stations).map(([sid, rows]) => { const m = Object.fromEntries(rows.map(c => [c.model_variable, c]));
+        const r = (k, name, hl) => m[k] ? `<tr${hl ? ' class="hl"' : ""}><td>${name}</td><td class="n">${fmt(m[k].bias,1)}</td><td class="n">${fmt(m[k].mae,1)}</td><td class="n">${fmt(m[k].corr,2)}</td><td class="n">${hrs(m[k])}</td></tr>` : "";
+        return `<tr><td colspan="5"><b>${esc(D.station_names[sid])}</b>, measured mean ${fmt((m.wind_speed_10m_kmh || {}).station_mean,1)} km/h</td></tr>` + r("wind_speed_10m_kmh", "10 m") + r("wind_speed_700hpa_kmh", "700 hPa (ridge height)") + r("blend_by_height_kmh", "Blend by height (used)", true); }).join("")}
+      </tbody></table></div><p class="chart-note">km/h, 20 Aug – 17 Nov 2026, each station against its own model cell. Bias = model minus station. Typical error = mean absolute error. Last column: hours at or above 25 km/h that the model also caught, and the extra hours it flagged that the station did not.</p>`;
   }
   function sensTable(host) {
     const rows = [["Upwind search 100 m (not 300 m)", "1.00, 1.00, 1.00", "8, 9, 9"], ["Threshold 20 km/h", "0.86, 0.96, 0.96", "9, 10, 10"],
@@ -392,7 +393,7 @@ uv run mountain exposure run --route north_victoria --as-of 2026-11-09T18:00</pr
   $("#routes-t").innerHTML = `<thead><tr><th>Route</th><th>Region</th><th class="n">km</th><th class="n">Gain</th><th class="n">Max (GPX)</th><th class="n">Points</th><th class="n">Weather cells</th>${lf.map(l => `<th class="n">${l.split("_")[0]}</th>`).join("")}</tr></thead><tbody>
     ${D.routes.map(r => `<tr><td>${esc(r.name)}${r.committed_to_repo ? "" : ' <span class="tag">local only</span>'}</td><td>${esc(r.region_id.replace("_", " "))}</td>
       <td class="n">${fmt(r.distance_m / 1000, 2)}</td><td class="n">+${fmt(r.gain_gpx_m)} m</td><td class="n">${fmt(r.max_ele_gpx_m)} m</td><td class="n">${r.route_points}</td>
-      <td class="n">${r.cells || "tonight"}</td>${lf.map(l => `<td class="n">${r.landforms[l] || 0}</td>`).join("")}</tr>`).join("")}</tbody>`;
+      <td class="n">${r.cells || "–"}</td>${lf.map(l => `<td class="n">${r.landforms[l] || 0}</td>`).join("")}</tr>`).join("")}</tbody>`;
 
   // ---- decisions
   function drawDecisions(q) {

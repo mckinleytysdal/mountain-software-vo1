@@ -64,10 +64,19 @@ database (`issue_time_known = 0`, note on the fetch row).
 
 ## Real cell count
 
-| Region | Cells | Source of route points |
-|---|---|---|
-| Lake Louise (North Victoria) | 5 | site copy of McKinley's track (98 route points) |
-| Columbia Icefield | not yet | needs the Silverhorn GPX |
-| Burstall | not yet | needs the Sir Douglas and FHR GPX |
+From the grid coordinates the API returned for every route point
+(`uv run mountain weather cells`, 2026-11-19):
 
-Run `uv run mountain weather cells` after loading the GPX files to fill this in.
+| Region | Route | Cells | Model ground height of those cells |
+|---|---|---:|---|
+| Columbia Icefield | Silverhorn | 2 | 2,412-2,607 m |
+| Lake Louise | North Victoria | 5 | 1,766-2,345 m |
+| Burstall | Sir Douglas West Ridge | 6 | |
+| Burstall | French-Haig-Robertson | 7 | |
+| Burstall | both routes (4 shared) | 9 | 2,192-2,615 m |
+| **All** | | **16** | |
+
+SPEC.md estimated 2-4 cells for Athabasca and 3-6 per Burstall route with
+heavy overlap; the real counts fit. Every summit sits far above its cell's
+model ground (for example North Victoria 3,388 m vs 2,345 m), which is why
+the index mixes 10 m and 700 hPa wind by height (decision D43, docs/stations.md).

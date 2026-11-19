@@ -181,7 +181,7 @@ def status_checks(main: sqlite3.Connection, weather_conn: sqlite3.Connection | N
         {"item": "Route points for all 4 tracks", "state": "done" if len(routes) == 4 else "partial",
          "detail": f"{len(routes)} routes loaded; real-data checks pass"},
         {"item": "Weather collector and backfill", "state": "done" if len(regions_with_weather) == 3 else "partial",
-         "detail": f"weather stored for: {', '.join(r.replace('_', ' ') for r in regions_with_weather) or 'none yet'}; Icefield and Burstall download tonight"},
+         "detail": f"weather stored for: {', '.join(r.replace('_', ' ') for r in regions_with_weather) or 'none yet'}"},
         {"item": "DEM terrain features", "state": "done" if routes and all(r["landforms"] for r in routes.values()) else "partial",
          "detail": "slope, aspect, landform class, Sx for every route point"},
         {"item": "Exposure index (B0 and M1) on one peak", "state": "done", "detail": "North Victoria"},

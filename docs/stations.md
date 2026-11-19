@@ -18,40 +18,64 @@ API: `https://weather.prod.avalanche.ca/stations/{id}/measurements`, no key,
 archive from about December 2023. Times are UTC: the station's warmest hour
 on average is 21 UTC (15:00 MDT).
 
-## Result 1: Bosworth Upper vs HRDPS, 2026-08-20 to 2026-11-17
+## Result: three stations vs HRDPS, 2026-08-20 to 2026-11-17
 
-2,160 paired hours. Provisional: the model values are from the stored HRDPS
-cell nearest the station (8.8 km away, model height 2,168 m), because the
-Open-Meteo daily limit was used up before the station's own cell could be
-fetched. Redo with `validation.stations.station_cell` when the limit resets.
+Each station is compared with its **own** HRDPS cell (found with
+`validation.stations.station_cell`), about 2,160 paired hours each. Bias =
+model minus station; typical error = mean absolute error (MAE). km/h.
+"Blend" mixes 10 m and 700 hPa wind by the station's height between the model
+ground and the 700 hPa height (the wind M1 uses). Rerun with
+`validation.stations.compare`.
 
-| Model wind | Station mean | Model mean | Bias | MAE | r | Hours >= 25 km/h (station 921) |
-|---|---:|---:|---:|---:|---:|---|
-| 10 m | 24.4 | 6.9 | -17.4 | 17.6 | 0.61 | model 0 |
-| 700 hPa | 24.4 | 28.7 | +4.3 | 8.2 | 0.78 | model 1,098, both 802 |
-| blend by height (weight 0.69) | 24.4 | 20.8 | -3.6 | 7.2 | 0.79 | model 692, both 586 |
+### Wind speed
 
-Units km/h. Bias = model minus station.
+| Station (height; model ground) | Model wind | Mean (station 24.4 / 20.1 / 5.4) | Bias | MAE | r | Hours >= 25 km/h caught |
+|---|---|---:|---:|---:|---:|---|
+| Bosworth Upper (2,745 m; 1,965 m) | 10 m | 7.9 | -16.4 | 16.7 | 0.68 | 0 of 921 |
+| | 700 hPa | 32.0 | +7.6 | 10.1 | 0.81 | 863 of 921, 422 false |
+| | **blend** | 24.9 | **+0.6** | **6.5** | **0.82** | 748 of 921, 178 false |
+| Tangle Ridge (3,009 m; 2,157 m) | 10 m | 3.7 | -16.4 | 16.5 | 0.29 | 0 of 643 |
+| | 700 hPa | 28.5 | +8.4 | 10.8 | 0.67 | 555 of 643, 587 false |
+| | **blend** | 27.3 | +7.2 | **10.0** | **0.68** | 538 of 643, 534 false |
+| Burstall Pass (2,300 m; 2,348 m) | 10 m | 9.3 | +3.9 | 4.2 | 0.74 | station never reached 25 |
+| | 700 hPa | 33.3 | +27.9 | 27.9 | 0.74 | 1,318 false |
+| | **blend** (= 10 m here) | 9.3 | +3.9 | 4.2 | 0.74 | 3 false |
 
-| Wind direction (station wind >= 10 km/h) | Mean difference | Within 45° |
-|---|---:|---:|
-| 10 m | 52° | 51% |
-| 700 hPa | 63° | 26% |
-| blend | 61° | 28% |
+### Wind direction (hours with station wind >= 10 km/h; mean circular difference)
 
-| Temperature | Bias | MAE | r |
+| Station | 10 m | 700 hPa | blend |
 |---|---:|---:|---:|
-| 2 m (cell at 2,168 m) | +0.7 °C | 2.5 °C | 0.91 |
-| 700 hPa | -1.4 °C | 2.2 °C | 0.92 |
+| Bosworth Upper | 60° | 65° | 64° |
+| Tangle Ridge | 83° | 25° | 25° |
+| Burstall Pass (225 h only) | 27° | 51° | 27° |
+
+### Temperature (MAE)
+
+| Station | 2 m | 700 hPa |
+|---|---:|---:|
+| Bosworth Upper | 2.7 °C | 2.2 °C |
+| Tangle Ridge | 4.5 °C | 1.5 °C |
+| Burstall Pass | 2.3 °C | 4.7 °C |
 
 ## Interpretation
 
-- HRDPS 10 m wind badly under-reads ridge-top wind here: it never reached the
-  25 km/h transport threshold while the station passed it in 43% of hours.
-  Driving M1 with 10 m wind would show almost no snow transport.
-- Mixing 10 m and 700 hPa wind by height gives the smallest error and keeps
-  valley points from getting ridge-top wind. M1 now uses it (m1 v5).
-- Direction at this one station is matched better by 10 m wind than by
-  700 hPa wind, probably because the ridge steers the local flow. One
-  station is not enough to change the method; the "hybrid" option (700 hPa
-  speed, 10 m direction) exists to test this when more labels exist.
+- The height blend is the best or equal-best wind at all three stations. On
+  the two ridge stations, 10 m model wind never reached 25 km/h while the
+  stations did for 921 and 643 hours. At the sheltered Burstall Pass station,
+  which sits below the model's ground, 700 hPa wind would be wildly too strong;
+  the blend falls back to 10 m wind there by itself.
+- Direction: the earlier provisional result (10 m direction better at
+  Bosworth) did not hold on Bosworth's own cell (60° vs 65°, nearly equal) and
+  is reversed at Tangle Ridge (83° vs 25°). The "hybrid" option (700 hPa
+  speed, 10 m direction) has no support; the blend stays the default.
+- The blend over-reads Tangle Ridge by about 7 km/h and flags many hours at
+  25 km/h or more that the station did not see. A higher threshold or a
+  station-specific correction could be tested later; the ranking is not
+  sensitive to the threshold (see the research log).
+
+## Earlier provisional result (superseded)
+
+On 2026-11-18 Bosworth Upper was compared with the nearest stored cell 8.8 km
+away, because the Open-Meteo daily limit had been reached. Those numbers
+(blend MAE 7.2, 700 hPa MAE 8.2, 10 m MAE 17.6) pointed the same way and are
+replaced by the table above.

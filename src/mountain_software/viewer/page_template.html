@@ -208,7 +208,8 @@ uv run mountain exposure run --route north_victoria --as-of 2026-11-09T18:00</pr
   const wx = D.weather[0] || {};
   [["Routes loaded", D.routes.length],
    ["Route points", D.routes.reduce((a, r) => a + r.route_points, 0)],
-   ["Weather model runs stored", `${fmt(wx.runs)} (${esc((wx.region_id || "–").replace("_", " "))})`],
+   ["Weather model runs stored", D.weather.map(w => `${esc(w.region_id.replace("_", " "))} ${fmt(w.runs)}`).join(", ") || "none"],
+   ["Weather model cells", D.weather.map(w => `${esc(w.region_id.replace("_", " "))} ${w.cells}`).join(", ") || "none"],
    ["Observations stored", `${D.observations.total}, of which labelled: ${D.observations.labelled}`],
    ["Tests", "141 pass, CI green"]].forEach(([k, v]) => { $("#nums").append(el("dt", {}, k)); $("#nums").append(el("dd", {}, String(v))); });
 
@@ -251,9 +252,16 @@ uv run mountain exposure run --route north_victoria --as-of 2026-11-09T18:00</pr
       caveat: "Model snowfall is not measured snowfall."
     },
     {
+      claim: "The same storms drive all three regions; how much a route sees depends on how far it rises above the model's ground.",
+      conf: "medium", tags: ["27 shared days", "4 routes"],
+      body: "From 23 October to 18 November the daily loading of the four routes moved together (correlation 0.84–0.99): the big windows everywhere were 8–9 and 12–13 November, with ridge-height wind of 75–88 km/h from the SW to WSW. The amount differed a lot: average loading per route point per day was 35.7 on Silverhorn, 7.3 on North Victoria, 0.34 on Sir Douglas and 0.22 on French-Haig-Robertson. Silverhorn's points rise far above their model cells, so they get nearly full ridge wind; most Burstall points sit near or below their cells and get mostly the weak valley wind.",
+      change: "Observations from the Burstall area showing strong wind loading during those storms would mean the height blend under-reads wind there.",
+      caveat: "The index ranks points within one route; these totals are not a comparison of hazard between routes."
+    },
+    {
       claim: "I cannot yet say whether the terrain index beats the simple aspect rule.",
       conf: "certain", tags: ["0 labels"],
-      body: `The two methods agree on which half of the points is more exposed only part of the time (median rank correlation 0.32 across 81 active days), so the index is not just restating aspect. But "different" is not "better". Your 77 trip-report statements describe snow and weather, and none says snow was wind-loaded or scoured at a place, so none can serve as a test label.`,
+      body: `The two methods rank route points differently (median daily rank correlation 0.37 at North Victoria, 0.24 Silverhorn, 0.29 Sir Douglas, 0.08 French-Haig-Robertson), so the index is not just restating aspect. But "different" is not "better". Your 77 trip-report statements describe snow and weather, and none says snow was wind-loaded or scoured at a place, so none can serve as a test label.`,
       change: "About 10 labelled observations with time and location give a first, rough test; a season of them gives a real one.",
       caveat: ""
     },

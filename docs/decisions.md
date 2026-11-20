@@ -313,3 +313,32 @@ and stay git-ignored: the repo is public, and the Sir Douglas file carries a
 Trail Amigo copyright notice.
 
 **D47. North Victoria summit height 3,388 m confirmed by McKinley.**
+
+## Terrain source check (2026-11-20, read-only)
+
+**D48. No route point sits on lidar-derived ground; all 287 use the
+Copernicus-based part of MRDEM-30.**
+- The MRDEM product specification (Edition 1.2, 2025-06-20, section 11.5)
+  confirms a per-pixel source layer, MRDEM-30-SOURCE (called DTMS in its
+  glossary): 1 = adjusted Copernicus GLO-30, 5 = blended edge zone,
+  10 = HRDEM lidar mosaic. Where the value is 10, the 30 m terrain was
+  resampled from 1 m lidar.
+- Read at every route point (`mrdem-30-source.tif`): North Victoria 101/101,
+  Silverhorn 44/44, Sir Douglas West Ridge 57/57, French-Haig-Robertson 85/85
+  are value 1 (Copernicus). None is 5 or 10.
+- HRDEM lidar checked directly (NRCan STAC and the canelevation-dem bucket,
+  2026-11-20). Items whose bounding boxes touch the study areas:
+
+| Item | Type | Resolution | Year | Lidar at route points |
+|---|---|---|---|---|
+| BC-BC_East_Kootenay_UTM11_2015-1m | lidar project (hrdem-lidar) | 1 m | acquired 2015 (per project name; STAC date 2017-10-06) | 0 of 243 inside its extent |
+| 3_4-mosaic-1m / 3_4-mosaic-2m | HRDEM mosaic tile (Icefield, Lake Louise) | 1 m / 2 m | mosaic built 2025 | 0 of 145 |
+| 3_3-mosaic-1m / 3_3-mosaic-2m | HRDEM mosaic tile (Burstall) | 1 m / 2 m | mosaic built 2025 | 0 of 142 |
+
+- Across each study area (route plus 2 km), lidar covers 0 % at Icefield and
+  Lake Louise and about 1 % at Burstall: one BC-side patch whose nearest pixel
+  is about 3.5 km from the Sir Douglas route (km 9) and 5.4 km from FHR,
+  farther than any terrain search used (Sx 300 m, TPI 1 km).
+- Consequence: today every route point's terrain is MRDEM-30, from Copernicus
+  (TanDEM-X, 2011-2015) with forest and settlement removal. No pipeline output
+  was changed by this check.

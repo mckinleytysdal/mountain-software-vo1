@@ -1,0 +1,73 @@
+# Field observation template. Copy this block once per observation into a
+# file in data/observations/ and fill what you know. Leave a line out (or
+# comment it) when you do not know it. Times need a time zone: MDT is -06:00,
+# MST is -07:00. Load with: uv run mountain obs load data/observations/<file>.toml
+#
+# Log negatives too ("stable, nothing seen"), with is_negative = true.
+
+[[observations]]
+obs_key = "2026-12-01-north-victoria-01"   # unique, any text
+source_type = "own_field"      # own_field | own_trip_report | min_report | other_report | photo | satellite
+observer = "McKinley Tysdal"
+observed_at = 2026-12-01T09:30:00-07:00
+time_precision = "exact"       # exact | hour | part_of_day | day
+confidence = "high"            # high | medium | low
+# published_at = 2026-12-02T20:00:00-07:00   # when it was written up or posted
+
+# Where (from the watch track)
+peak_id = "victoria_north"
+route_id = "north_victoria"
+lat = 51.3901
+lon = -116.2802
+elev_m = 3150
+landform = "ridge"             # ridge | couloir_gully | basin_valley | steep_face | open_slope | glacier | summit | col | unknown
+aspect_deg = 90                # direction the slope faces, 0 = N
+location_note = "NE ridge above the col, east side"
+
+# Forecast carried
+forecast_source = "Avalanche Canada Lake Louise + SpotWx HRDPS"
+forecast_issue = 2026-11-30T16:00:00-07:00
+
+# Wind
+wind_speed_kmh = 30
+wind_from_deg = 270            # direction the wind comes FROM
+wind_method = "estimated"      # measured | estimated
+wind_kind = "sustained"        # sustained | gust
+
+# Weather
+air_temp_c = -12               # shaded
+precip_type = "none"
+cloud = "few"
+visibility = "good"
+
+# Snow
+surface_type = "wind_slab"     # powder | wind_slab | wind_crust | sun_crust | melt_freeze_crust | corn | wet | ice | rock | scree | firm | mixed | unknown
+penetration_cm = 15
+penetration_mode = "boot"      # boot | ski
+new_snow_cm = 5
+transport_signs = ["plumes", "cornices"]   # plumes | cornices | scoured | loaded | sastrugi | pillows | drifts | none
+wind_effect = "loaded"         # loaded | scoured | mixed | none_seen | unknown   <- the main label
+
+# Avalanches (leave out if none seen; set avalanche_seen = false for a clear negative)
+avalanche_seen = false
+# avalanche_aspect_deg = 45
+# avalanche_elev_m = 2900
+# avalanche_size = 1.5
+# avalanche_type = "wind slab"
+# avalanche_age = "fresh, under 24 h"
+# avalanche_trigger = "natural"
+
+# Glacier
+# bergschrund = "bridged"
+# bridge_quality = "thick, firm"
+
+photo_files = ["IMG_1234.jpg"]
+is_negative = false
+
+sentence = "On the NE ridge at about 3,150 m, fresh cornices and a boot-deep wind slab on the east side; light plumes off the summit in a moderate west wind."
+
+# Evidence: exact text you wrote, or a link for someone else's report (never a copy).
+[[observations.evidence]]
+kind = "quote"
+text = "Fresh cornices on the east side of the ridge, boot-deep slab below."
+author = "McKinley Tysdal"

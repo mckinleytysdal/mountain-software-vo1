@@ -1,0 +1,136 @@
+# Manifest of every route track used by Mountain Software.
+#
+# This file is committed. The GPX files it points to are NOT, except tracks
+# whose `committed_to_repo = true` (only McKinley's own recordings, after the
+# privacy check).
+#
+# Where to put the files (paths are relative to data/routes/):
+#   own/          McKinley's own recordings. Committed only when cleared.
+#   third_party/  CalTopo, TrailAmigo, AllTrails, ... Git-ignored. Never commit.
+#
+# `expected` holds the hand-checked numbers from SPEC.md section 4. The
+# real-data tests compare against them and are skipped when a file is missing.
+#
+# Weather backfill: `backfill_days` on a region = the last N whole UTC days;
+# `weather_dates` on a route = single trip dates.
+
+[[regions]]
+region_id = "icefield"
+name = "Columbia Icefield (Athabasca)"
+backfill_days = 30
+
+[[regions]]
+region_id = "lake_louise"
+name = "Lake Louise (North Victoria group)"
+backfill_days = 90
+
+[[regions]]
+region_id = "burstall"
+name = "Burstall (Mount Sir Douglas and the French-Haig-Robertson line)"
+backfill_days = 30
+notes = "Sir Douglas and FHR are one area with different features and elevation ranges. They always travel together in train/test splits."
+
+[[peaks]]
+peak_id = "athabasca"
+name = "Mount Athabasca"
+region_id = "icefield"
+published_elev_m = 3491
+elev_source = "SPEC.md (Mountain Project / published summit height)"
+is_11000er = true
+
+[[peaks]]
+peak_id = "victoria_north"
+name = "Mount Victoria (North)"
+region_id = "lake_louise"
+published_elev_m = 3388
+elev_source = "McKinley's 11,000ers site (published north summit). SPEC.md listed ~3,464 m, which is the south (main) summit."
+is_11000er = true
+
+[[peaks]]
+peak_id = "sir_douglas"
+name = "Mount Sir Douglas"
+region_id = "burstall"
+published_elev_m = 3406
+elev_source = "SPEC.md (TrailAmigo route page)"
+is_11000er = true
+
+[[routes]]
+route_id = "silverhorn"
+name = "Mount Athabasca, Silverhorn"
+region_id = "icefield"
+peak_id = "athabasca"
+route_shape = "one_way"
+file = "third_party/silverhorn_caltopo.gpx"
+source = "CalTopo export, origin unknown (treated as a third-party track)"
+source_url = ""
+download_date = "2026-11-17"
+terms_note = "Third-party track of unconfirmed ownership. Reference geometry only; do not redistribute or commit. Glacier tracks are reference geometry only: crevasses and snow bridges change every season."
+redistribution_allowed = false
+committed_to_repo = false
+weather_dates = ["2025-06-27"]
+notes = "Timed, dated 2025-06-27. Not yet verified whether the line goes over Silverhorn or up the North Glacier."
+  [routes.expected]
+  distance_km = 10.49
+  gain_m = 1598
+  max_ele_m = 3457
+  # SPEC.md lists 1,403 "cleaned points"; the file has 1,611 points, none
+  # repeated, and no simple rule reproduces 1,403. Not checked (decision D45).
+
+[[routes]]
+route_id = "north_victoria"
+name = "Mount Victoria North, NE ridge via the Collier-Victoria col"
+region_id = "lake_louise"
+peak_id = "victoria_north"
+route_shape = "out_and_back"
+file = "own/north_victoria_2026-10-16_strava.gpx"
+source = "Strava export of McKinley's own activity, 2026-10-16"
+source_url = ""
+download_date = "2026-11-17"
+terms_note = "McKinley's own recording. Committed to the public repo untrimmed, by McKinley's decision on 2026-11-18."
+redistribution_allowed = true
+committed_to_repo = true
+weather_dates = ["2026-10-16"]
+notes = "Strava's logged weather (about 0 C, 3.6 km/h SW) is a model estimate, not a measurement."
+  [routes.expected]
+  distance_raw_km = 33.0
+  distance_km = 24.97
+  gain_m = 1847
+  max_ele_m = 3392
+
+[[routes]]
+route_id = "sir_douglas_west_ridge"
+name = "Mount Sir Douglas, West Ridge (ascent only)"
+region_id = "burstall"
+peak_id = "sir_douglas"
+route_shape = "one_way"
+file = "third_party/sir_douglas_west_ridge_trailamigo.gpx"
+source = "TrailAmigo"
+source_url = "https://trailamigo.com/trails/7eef1c77-003c-4e0e-89be-41c6191fdd36"
+download_date = "2026-11-17"
+terms_note = "File carries a Trail Amigo copyright and licence tag. Do not redistribute or commit. Return leg not in the file. Rockfall hazard is significant on this peak."
+redistribution_allowed = false
+committed_to_repo = false
+  [routes.expected]
+  distance_km = 13.99
+  gain_m = 1862
+  max_ele_m = 3385
+  points_clean = 814
+
+[[routes]]
+route_id = "french_haig_robertson"
+name = "French-Haig-Robertson ski traverse"
+region_id = "burstall"
+route_shape = "loop"
+file = "third_party/french_haig_robertson_alltrails.gpx"
+source = "AllTrails"
+source_url = ""
+download_date = "2026-11-17"
+terms_note = "AllTrails track. Do not redistribute or commit. Crosses the Haig Glacier to the Robertson/Sir Douglas col: glacier and avalanche terrain, reference geometry only."
+redistribution_allowed = false
+committed_to_repo = false
+notes = "No timestamps, so it cannot be tied to a specific weather day."
+  [routes.expected]
+  distance_km = 20.91
+  gain_m = 1093
+  max_ele_m = 2877
+  points_clean = 3953

@@ -1,0 +1,423 @@
+<title>Mountain Software</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap">
+<style>
+/* Layout: one reading column with a sticky section bar; findings are claim -> evidence -> what would change my mind. */
+:root {
+  --bg: #f3f6f7; --surface: #ffffff; --ink: #17212b; --muted: #5a6875; --line: #d8e0e5;
+  --accent: #4a3d8f; --ice: #2c6a8a; --ice-soft: #e2eef4; --violet-soft: #ebe8f7;
+  --ramp-lo: #e4e9f2; --ramp-hi: #3a3283; --track: #17212b;
+  --font-display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Inter", "Segoe UI", system-ui, sans-serif;
+  --font-data: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e1418; --surface: #151d23; --ink: #e5ecf0; --muted: #94a3ae; --line: #26323b;
+  --accent: #b2a7f5; --ice: #7cc3e0; --ice-soft: #16303c; --violet-soft: #262245;
+  --ramp-lo: #2a3441; --ramp-hi: #c2b9ff; --track: #e5ecf0; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0e1418; --surface: #151d23; --ink: #e5ecf0; --muted: #94a3ae; --line: #26323b;
+  --accent: #b2a7f5; --ice: #7cc3e0; --ice-soft: #16303c; --violet-soft: #262245;
+  --ramp-lo: #2a3441; --ramp-hi: #c2b9ff; --track: #e5ecf0; color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.6 var(--font-body); margin: 0; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+.wrap { max-width: 980px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+header.top { background: var(--surface); border-bottom: 1px solid var(--line); }
+header.top .wrap { padding-block: 28px 20px; display: grid; gap: 10px; }
+.eyebrow { font: 500 12px/1 var(--font-data); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(28px, 4vw, 40px); line-height: 1.1; letter-spacing: -.01em; }
+h2 { font-size: 24px; line-height: 1.2; }
+h3 { font-size: 17px; line-height: 1.3; }
+p { margin: 0; max-width: 68ch; }
+.lede { font-size: 17px; color: var(--ink); }
+.muted { color: var(--muted); }
+nav.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--surface); border-bottom: 1px solid var(--line); }
+nav.bar .wrap { display: flex; gap: 4px; overflow-x: auto; padding-block: 6px; scrollbar-width: none; }
+nav.bar a { flex: none; font: 500 13px/1 var(--font-body); color: var(--muted); text-decoration: none; padding: 9px 12px; border-radius: 6px; }
+nav.bar a:hover, nav.bar a:focus-visible { color: var(--ink); background: var(--ice-soft); outline: none; }
+main .wrap { display: grid; gap: 56px; padding-block: 40px 80px; }
+section { display: grid; gap: 18px; scroll-margin-top: 64px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px; display: grid; gap: 14px; min-width: 0; align-content: start; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.pill { display: inline-flex; align-items: center; gap: 6px; font: 500 12px/1 var(--font-data); padding: 5px 9px; border-radius: 999px; white-space: nowrap; }
+.pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.s-done { color: var(--ice); background: var(--ice-soft); }
+.s-partial { color: var(--muted); background: transparent; border: 1px dashed var(--line); }
+.s-blocked { color: var(--accent); background: var(--violet-soft); }
+.s-blocked::before { border-radius: 1px; transform: rotate(45deg); }
+ul.checks { list-style: none; margin: 0; padding: 0; display: grid; }
+ul.checks li { display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; padding: 12px 0; border-top: 1px solid var(--line); }
+ul.checks li:first-child { border-top: 0; }
+ul.checks .d { grid-column: 1 / -1; font-size: 13px; color: var(--muted); }
+.meter { height: 8px; border-radius: 4px; background: var(--line); overflow: hidden; }
+.meter > span { display: block; height: 100%; background: var(--ice); }
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; font-size: 14px; }
+.kv dt { color: var(--muted); }
+.kv dd { margin: 0; font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+.finding { border-left: 3px solid var(--accent); }
+.finding .claim { font: 600 18px/1.35 var(--font-display); }
+.tagrow { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag { font: 500 11px/1 var(--font-data); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line); padding: 5px 7px; border-radius: 4px; }
+.sub { font: 600 12px/1 var(--font-data); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 600 11.5px/1.2 var(--font-data); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+td.n, th.n { text-align: right; font-family: var(--font-data); font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr.hl td { background: var(--ice-soft); }
+svg text { fill: var(--muted); font: 11px var(--font-data); }
+.bars rect.track { fill: var(--line); }
+.chart-note { font-size: 12.5px; color: var(--muted); }
+.mapwrap { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 16px; }
+@media (max-width: 760px) { .mapwrap { grid-template-columns: 1fr; } }
+#map svg, #profile svg, .fig svg { width: 100%; height: auto; display: block; }
+#map circle { cursor: pointer; stroke: var(--track); stroke-width: .6; }
+#map circle.sel { stroke-width: 2.4; }
+#map circle:focus-visible { outline: none; stroke-width: 2.4; }
+.why h3 { font-size: 20px; }
+.why .because { display: grid; gap: 8px; margin: 0; padding-left: 18px; }
+.legend { display: flex; align-items: center; gap: 10px; font: 12px var(--font-data); color: var(--muted); }
+.legend .ramp { width: 140px; height: 10px; border-radius: 5px; background: linear-gradient(90deg, var(--ramp-lo), var(--ramp-hi)); border: 1px solid var(--line); }
+input[type=search] { width: 100%; font: 14px var(--font-body); padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+input[type=search]:focus-visible { outline: 2px solid var(--ice); outline-offset: 1px; }
+details.dec { border-top: 1px solid var(--line); padding: 10px 0; }
+details.dec summary { cursor: pointer; display: grid; grid-template-columns: 48px 1fr; gap: 10px; list-style: none; }
+details.dec summary::-webkit-details-marker { display: none; }
+details.dec summary .id { font: 500 12.5px/1.6 var(--font-data); color: var(--accent); }
+details.dec p { margin: 8px 0 0 58px; font-size: 14px; color: var(--muted); }
+.decgroup h3 { margin-top: 14px; font-size: 14px; color: var(--muted); font-family: var(--font-data); text-transform: uppercase; letter-spacing: .05em; }
+code, .mono { font-family: var(--font-data); font-size: 13px; }
+pre { margin: 0; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; overflow-x: auto; font: 13px/1.6 var(--font-data); }
+ol.need { margin: 0; padding-left: 20px; display: grid; gap: 10px; max-width: 70ch; }
+footer { border-top: 1px solid var(--line); }
+footer .wrap { padding-block: 24px 40px; font-size: 12.5px; color: var(--muted); display: grid; gap: 6px; }
+a { color: var(--ice); }
+@media (prefers-reduced-motion: no-preference) { nav.bar a, #map circle { transition: background .15s, stroke-width .15s; } }
+</style>
+
+<header class="top"><div class="wrap">
+  <span class="eyebrow">Mountain Software · research status · <span id="built"></span></span>
+  <h1>Where wind loads and scours snow on Canadian Rockies peaks</h1>
+  <p class="lede" id="headline"></p>
+</div></header>
+<nav class="bar" aria-label="Sections"><div class="wrap">
+  <a href="#status">Where we are</a><a href="#why">What I think and why</a><a href="#victoria">North Victoria, one storm</a>
+  <a href="#routes">Routes</a><a href="#decisions">Every decision</a><a href="#run">Run it yourself</a>
+</div></nav>
+
+<main><div class="wrap">
+
+<section id="status" aria-labelledby="h-status">
+  <h2 id="h-status">Where we are</h2>
+  <div class="grid2">
+    <div class="panel">
+      <div class="sub">Prototype 0 checklist</div>
+      <ul class="checks" id="checks"></ul>
+    </div>
+    <div class="panel">
+      <div class="sub">In plain words</div>
+      <p>The pipeline is built: your four routes become points every 250 m, each point gets its weather-model cell and its terrain from a 30 m elevation map, and an index ranks the points by how likely wind is to have dropped snow there.</p>
+      <p>The research question, <em>does terrain plus weather beat the simple "lee side of the wind" rule?</em>, is still unanswered. Answering it needs observations that say "loaded" or "scoured" at a place and time. There are none yet.</p>
+      <dl class="kv" id="nums"></dl>
+      <div class="sub">What I need from you</div>
+      <ol class="need">
+        <li>On your next trips, one line per notable slope: where, when, and whether wind <b>added</b> snow (pillowy, slab, fresh cornice) or <b>stripped</b> it (hard, rippled, rock showing). Use <span class="mono">templates/field_observation.toml</span>, or just write the sentence and I will convert it.</li>
+        <li>Nothing else is blocking. All three regions now have weather data and real model cells.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section id="why" aria-labelledby="h-why">
+  <h2 id="h-why">What I think and why</h2>
+  <p class="muted">Each finding says what I believe, the evidence, how sure I am, and what would change my mind. All are exploratory.</p>
+  <div id="findings" style="display:grid;gap:16px"></div>
+</section>
+
+<section id="victoria" aria-labelledby="h-vic">
+  <h2 id="h-vic">North Victoria, the 6–9 November storm</h2>
+  <p>The strongest wind-and-snow window in the last 90 days at Lake Louise. Click any route point to see why it got its score. Colour shows <b>relative exposure to potential wind loading</b>: a rank among the points of this route, from 0 (least) to 1 (most). It is not a hazard rating.</p>
+  <div class="panel" id="wxbox"></div>
+  <div class="mapwrap">
+    <div class="panel"><div id="map" aria-label="Route points coloured by index"></div>
+      <div class="legend"><span>0</span><span class="ramp"></span><span>1</span><span>· relative exposure to potential wind loading</span></div>
+    </div>
+    <div class="panel why" id="why-point" aria-live="polite"></div>
+  </div>
+  <div class="panel"><div class="sub">Along the route: height and index</div><div id="profile"></div>
+    <p class="chart-note">Bars show the index at each route point; the line is ground height from the 30 m DEM. Out along the lake, up the glacier, the NE ridge to the summit near km 13.5, and back.</p></div>
+</section>
+
+<section id="routes" aria-labelledby="h-routes">
+  <h2 id="h-routes">Routes</h2>
+  <div class="panel tbl"><table id="routes-t"></table></div>
+  <p class="chart-note">Landform counts are route points per class (ridge, couloir or gully, basin or valley, steep face, open slope). Third-party tracks are used locally only and are never published.</p>
+</section>
+
+<section id="decisions" aria-labelledby="h-dec">
+  <h2 id="h-dec">Every decision, with the reason</h2>
+  <p class="muted">From <span class="mono">docs/decisions.md</span>. Search by word, for example "wind", "look-ahead", "DEM".</p>
+  <label class="sub" for="decq">Search decisions</label>
+  <input type="search" id="decq" placeholder="Type to filter">
+  <div id="declist"></div>
+</section>
+
+<section id="run" aria-labelledby="h-run">
+  <h2 id="h-run">Run it yourself</h2>
+  <div class="panel">
+    <p>The same views, live from your own database, with buttons to run each step:</p>
+    <pre>uv sync --group app
+uv run streamlit run app/streamlit_app.py</pre>
+    <p class="muted">Or step by step on the command line:</p>
+    <pre>uv run mountain routes load
+uv run mountain weather cells
+uv run mountain weather backfill
+uv run mountain terrain compute
+uv run mountain exposure run --route north_victoria --as-of 2026-11-09T18:00</pre>
+  </div>
+</section>
+
+</div></main>
+<footer><div class="wrap">
+  <span>Exploratory research output. Not a hazard rating, not an official warning, not a verified observation. Official forecasts: <a href="https://avalanche.ca/forecasts" target="_blank" rel="noopener">avalanche.ca/forecasts</a>.</span>
+  <span>Weather data by Open-Meteo.com (CC BY 4.0), GEM HRDPS by Environment and Climate Change Canada. DEM: NRCan MRDEM-30 (OGL-Canada 2.0), contains modified Copernicus GLO-30 data. Station statistics from Avalanche Canada / Parks Canada data (summary only).</span>
+</div></footer>
+
+<script type="application/json" id="data">__DATA__</script>
+<script>
+(function () {
+  const D = JSON.parse(document.getElementById("data").textContent);
+  const $ = (s) => document.querySelector(s);
+  const el = (tag, attrs = {}, html = "") => { const e = document.createElement(tag); for (const k in attrs) e.setAttribute(k, attrs[k]); e.innerHTML = html; return e; };
+  const fmt = (x, d = 0) => (x === null || x === undefined || Number.isNaN(x)) ? "–" : Number(x).toLocaleString("en-CA", { minimumFractionDigits: d, maximumFractionDigits: d });
+  const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+  const compass = (d) => d == null ? "–" : ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"][Math.round(((d % 360) / 22.5)) % 16];
+
+  $("#built").textContent = D.built;
+  const done = D.status.filter(s => s.state === "done").length;
+  $("#headline").textContent = `${done} of ${D.status.length} checklist items done. The machinery works end to end; the scientific test is waiting on labelled field observations.`;
+
+  // ---- checklist
+  const label = { done: "done", partial: "in progress", blocked: "waiting on data" };
+  D.status.forEach(s => $("#checks").append(el("li", {}, `<span>${esc(s.item)}</span><span class="pill s-${s.state}">${label[s.state]}</span><span class="d">${esc(s.detail)}</span>`)));
+  const wx = D.weather[0] || {};
+  [["Routes loaded", D.routes.length],
+   ["Route points", D.routes.reduce((a, r) => a + r.route_points, 0)],
+   ["Weather model runs stored", D.weather.map(w => `${esc(w.region_id.replace("_", " "))} ${fmt(w.runs)}`).join(", ") || "none"],
+   ["Weather model cells", D.weather.map(w => `${esc(w.region_id.replace("_", " "))} ${w.cells}`).join(", ") || "none"],
+   ["Observations stored", `${D.observations.total}, of which labelled: ${D.observations.labelled}`],
+   ["Tests", "141 pass, CI green"]].forEach(([k, v]) => { $("#nums").append(el("dt", {}, k)); $("#nums").append(el("dd", {}, String(v))); });
+
+  // ---- findings
+  const st = Object.fromEntries(D.station.map(c => [c.model_variable, c]));
+  const s10 = st.wind_speed_10m_kmh || {}, s700 = st.wind_speed_700hpa_kmh || {};
+  const blend = st.blend_by_height_kmh || D.blend_station;
+  const hrs = (c) => c && c.station_hours_over != null ? `${fmt(c.both_hours_over)} of ${fmt(c.station_hours_over)}${c.model_hours_over - c.both_hours_over ? ` (+${fmt(c.model_hours_over - c.both_hours_over)} false)` : ""}` : "–";
+  const findings = [
+    {
+      claim: "The weather model's 10 m wind badly under-reads the wind on ridges.",
+      conf: "high", tags: ["evidence: 90 days", "2 ridge stations"],
+      body: `At Bosworth Upper, a Parks Canada ridge-top station at 2,745 m about 10 km from North Victoria, measured wind averaged <b>${fmt(s10.station_mean,1)} km/h</b> over 90 days. The model's 10 m wind for the same hours averaged <b>${fmt(s10.model_mean,1)} km/h</b> and never reached 25 km/h, while the station passed 25 km/h in ${fmt(s10.station_hours_over)} hours. Tangle Ridge (3,009 m, near the Columbia Icefield) shows the same: 10 m model wind never reached 25 km/h there either. The model's ground sits 800–850 m below these ridges, so its "10 m wind" is wind over a smoothed valley, not a ridge.`,
+      chart: "speed",
+      change: "A ridge station where 10 m model wind matches measured wind. None so far.",
+      caveat: s10.cell_note
+    },
+    {
+      claim: "Mixing 10 m and ridge-height (700 hPa) wind by each point's height is the best wind to drive the index.",
+      conf: "high", tags: ["evidence: 90 days", "3 stations", "used in M1 v5"],
+      body: `At Bosworth Upper, ridge-height (700 hPa) wind alone ran high (bias +${fmt(s700.bias,1)} km/h, typical error ${fmt(s700.mae,1)}). Blending 10 m and ridge-height wind by the station's height cut the typical error to <b>${fmt(blend.mae,1)} km/h</b> with almost no bias (${fmt(blend.bias,1)}). The blend was also best at Tangle Ridge, and at the sheltered Burstall Pass station, which sits below the model's ground, it falls back to 10 m wind by itself, where 700 hPa wind would be 28 km/h too strong. It also stops valley-floor points from getting ridge-top wind.`,
+      table: true,
+      change: "Field labels that a different wind source predicts better.",
+      caveat: "The blend still over-reads Tangle Ridge by about 7 km/h. Direction: 700 hPa direction matched Tangle Ridge far better than 10 m (25° vs 83° average difference); at Bosworth both were about 60°. So 10 m direction is not used."
+    },
+    {
+      claim: "Which wind drives the index matters far more than any other setting.",
+      conf: "high", tags: ["3 storm days", "6 variants"],
+      body: "I re-ran the index with each setting changed. Changing the upwind search distance (100 m vs 300 m), the transport threshold (20 or 30 km/h) or the power of wind speed (3 vs 4) kept almost the same ranking (correlation 0.86–1.00, 8–10 of the top 10 points unchanged). Switching the wind source dropped the correlation to 0.18–0.35 and kept only 2–4 of the top 10.",
+      sens: true,
+      change: "Nothing to change here; this tells me where labels must focus: the wind source is the decision to test first.",
+      caveat: "Tested on three windows on one route."
+    },
+    {
+      claim: "6–9 November was the strongest loading window of the last 90 days at North Victoria.",
+      conf: "medium", tags: ["86 daily windows"],
+      body: "Each bar is the total potential loading on the route in the 72 hours before noon that day. The 9 November bar is highest. Bosworth Upper measured up to 39 km/h from the south-southeast on 8 November, and the model had 5–8.5 cm of new snow. With the 10 m wind (grey), the index sees almost nothing on any day.",
+      chart: "scan",
+      change: "Your memory or photos of that week, or an Avalanche Canada field report that mentions wind slabs near Lake Louise then.",
+      caveat: "Model snowfall is not measured snowfall."
+    },
+    {
+      claim: "The same storms drive all three regions; how much a route sees depends on how far it rises above the model's ground.",
+      conf: "medium", tags: ["27 shared days", "4 routes"],
+      body: "From 23 October to 18 November the daily loading of the four routes moved together (correlation 0.84–0.99): the big windows everywhere were 8–9 and 12–13 November, with ridge-height wind of 75–88 km/h from the SW to WSW. The amount differed a lot: average loading per route point per day was 35.7 on Silverhorn, 7.3 on North Victoria, 0.34 on Sir Douglas and 0.22 on French-Haig-Robertson. Silverhorn's points rise far above their model cells, so they get nearly full ridge wind; most Burstall points sit near or below their cells and get mostly the weak valley wind.",
+      change: "Observations from the Burstall area showing strong wind loading during those storms would mean the height blend under-reads wind there.",
+      caveat: "The index ranks points within one route; these totals are not a comparison of hazard between routes."
+    },
+    {
+      claim: "I cannot yet say whether the terrain index beats the simple aspect rule.",
+      conf: "certain", tags: ["0 labels"],
+      body: `The two methods rank route points differently (median daily rank correlation 0.37 at North Victoria, 0.24 Silverhorn, 0.29 Sir Douglas, 0.08 French-Haig-Robertson), so the index is not just restating aspect. But "different" is not "better". Your 77 trip-report statements describe snow and weather, and none says snow was wind-loaded or scoured at a place, so none can serve as a test label.`,
+      change: "About 10 labelled observations with time and location give a first, rough test; a season of them gives a real one.",
+      caveat: ""
+    },
+  ];
+  const confLabel = { high: "fairly sure", medium: "leaning", certain: "sure" };
+  findings.forEach((f, i) => {
+    const p = el("article", { class: "panel finding" });
+    p.innerHTML = `<div class="claim">${esc(f.claim)}</div>
+      <div class="tagrow"><span class="pill ${f.conf === "medium" ? "s-partial" : "s-done"}">${confLabel[f.conf]}</span>${f.tags.map(t => `<span class="tag">${esc(t)}</span>`).join("")}</div>
+      <p>${f.body}</p><div class="fig" id="fig${i}"></div>
+      <p><span class="sub">What would change my mind</span><br>${esc(f.change)}</p>
+      ${f.caveat ? `<p class="chart-note">${esc(f.caveat)}</p>` : ""}`;
+    $("#findings").append(p);
+    if (f.chart === "speed") speedChart($("#fig" + i));
+    if (f.table) stationTable($("#fig" + i));
+    if (f.sens) sensTable($("#fig" + i));
+    if (f.chart === "scan") scanChart($("#fig" + i));
+  });
+
+  function speedChart(host) {
+    const rows = [["Measured at station", s10.station_mean, "var(--ink)"], ["Model 10 m wind", s10.model_mean, "var(--muted)"],
+                  ["Model, blended by height", blend.model_mean, "var(--ice)"], ["Model 700 hPa wind", s700.model_mean, "var(--accent)"]];
+    const W = 640, rowH = 34, left = 190, max = 35;
+    let s = `<svg class="bars" viewBox="0 0 ${W} ${rows.length * rowH + 26}" role="img" aria-label="Mean wind speed, station vs model">`;
+    rows.forEach(([name, v, col], i) => {
+      const y = i * rowH + 6, w = (W - left - 60) * (v / max);
+      s += `<text x="0" y="${y + 15}">${name}</text><rect class="track" x="${left}" y="${y + 4}" width="${W - left - 60}" height="14" rx="3"></rect>
+            <rect x="${left}" y="${y + 4}" width="${w}" height="14" rx="3" style="fill:${col}"></rect><text x="${left + w + 6}" y="${y + 15}">${fmt(v, 1)}</text>`;
+    });
+    [0, 10, 20, 30].forEach(t => { const x = left + (W - left - 60) * t / max; s += `<text x="${x}" y="${rows.length * rowH + 20}" text-anchor="middle">${t}</text>`; });
+    s += `</svg><p class="chart-note">Mean wind speed (km/h), 20 Aug – 17 Nov 2026, same hours for all bars.</p>`;
+    host.innerHTML = s;
+  }
+  function stationTable(host) {
+    host.innerHTML = `<div class="tbl"><table><thead><tr><th>Model wind</th><th class="n">Bias</th><th class="n">Typical error</th><th class="n">Correlation</th><th class="n">Hours ≥ 25 km/h caught</th></tr></thead><tbody>
+      ${Object.entries(D.stations).map(([sid, rows]) => { const m = Object.fromEntries(rows.map(c => [c.model_variable, c]));
+        const r = (k, name, hl) => m[k] ? `<tr${hl ? ' class="hl"' : ""}><td>${name}</td><td class="n">${fmt(m[k].bias,1)}</td><td class="n">${fmt(m[k].mae,1)}</td><td class="n">${fmt(m[k].corr,2)}</td><td class="n">${hrs(m[k])}</td></tr>` : "";
+        return `<tr><td colspan="5"><b>${esc(D.station_names[sid])}</b>, measured mean ${fmt((m.wind_speed_10m_kmh || {}).station_mean,1)} km/h</td></tr>` + r("wind_speed_10m_kmh", "10 m") + r("wind_speed_700hpa_kmh", "700 hPa (ridge height)") + r("blend_by_height_kmh", "Blend by height (used)", true); }).join("")}
+      </tbody></table></div><p class="chart-note">km/h, 20 Aug – 17 Nov 2026, each station against its own model cell. Bias = model minus station. Typical error = mean absolute error. Last column: hours at or above 25 km/h that the model also caught, and the extra hours it flagged that the station did not.</p>`;
+  }
+  function sensTable(host) {
+    const rows = [["Upwind search 100 m (not 300 m)", "1.00, 1.00, 1.00", "8, 9, 9"], ["Threshold 20 km/h", "0.86, 0.96, 0.96", "9, 10, 10"],
+      ["Threshold 30 km/h", "0.97, 0.95, 0.95", "10, 10, 10"], ["Wind speed to the power 3 (not 4)", "1.00, 1.00, 1.00", "9, 10, 10"],
+      ["Wind: 700 hPa only", "0.32, 0.23, 0.35", "3, 2, 3"], ["Wind: 700 hPa speed, 10 m direction", "0.27, 0.23, 0.18", "4, 3, 4"]];
+    host.innerHTML = `<div class="tbl"><table><thead><tr><th>Change from the default</th><th class="n">Ranking still matches (r)</th><th class="n">Top-10 points kept</th></tr></thead><tbody>
+      ${rows.map((r, i) => `<tr${i > 3 ? ' class="hl"' : ""}><td>${r[0]}</td><td class="n">${r[1]}</td><td class="n">${r[2]}</td></tr>`).join("")}</tbody></table></div>
+      <p class="chart-note">Three windows ending 30 Sep, 9 Nov and 12 Nov 2026 at 18:00 UTC.</p>`;
+  }
+  function scanChart(host) {
+    const b = D.scan.blend || [], t = D.scan["10m"] || [];
+    const W = 680, H = 190, L = 36, B = 26, n = b.length, max = Math.max(...b.map(x => x.loading), 1);
+    const bw = (W - L - 6) / n;
+    let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Daily potential loading, 86 days">`;
+    [0, .5, 1].forEach(f => { const y = H - B - (H - B - 10) * f; s += `<line x1="${L}" x2="${W}" y1="${y}" y2="${y}" style="stroke:var(--line)"></line><text x="${L - 6}" y="${y + 4}" text-anchor="end">${fmt(max * f)}</text>`; });
+    b.forEach((d, i) => {
+      const h = (H - B - 10) * d.loading / max, x = L + i * bw;
+      const top = d.day === "2026-11-09";
+      s += `<rect x="${x + .5}" y="${H - B - h}" width="${Math.max(bw - 1, 1)}" height="${h}" style="fill:${top ? "var(--accent)" : "var(--ice)"}"><title>${d.day}: ${fmt(d.loading)}</title></rect>`;
+      const tt = t[i]; if (tt && tt.loading > 0) { const h2 = Math.max((H - B - 10) * tt.loading / max, 1.5); s += `<rect x="${x + .5}" y="${H - B - h2}" width="${Math.max(bw - 1, 1)}" height="${h2}" style="fill:var(--muted)"></rect>`; }
+      if (d.day.endsWith("-01")) s += `<text x="${x}" y="${H - 8}">${new Date(d.day + "T12:00:00Z").toLocaleString("en-CA", { month: "short", timeZone: "UTC" })}</text>`;
+    });
+    s += `</svg><p class="chart-note">Total potential loading on the route, 72 h before 18:00 UTC each day, 24 Aug – 17 Nov 2026. Blended wind in blue (9 Nov highlighted); 10 m wind in grey.</p>`;
+    host.innerHTML = s;
+  }
+
+  // ---- North Victoria storm
+  const W = D.window_weather;
+  if (W.length) {
+    const hi = W[W.length - 1];
+    $("#wxbox").innerHTML = `<div class="sub">What the weather model said, ${esc(D.exposure.window_start)} to ${esc(D.exposure.as_of)} UTC (only runs published by then)</div>
+      <div class="tbl"><table><thead><tr><th>Model cell (ground height)</th><th class="n">Ridge wind &gt; 25 km/h</th><th class="n">Max ridge wind</th><th class="n">Max 10 m wind</th><th class="n">Mean ridge wind from</th><th class="n">New snow</th></tr></thead><tbody>
+      ${W.map(c => `<tr><td>Cell ${c.cell_id} (${fmt(c.model_elev_m)} m)</td><td class="n">${c.hours_700_over_25} of ${c.hours} h</td><td class="n">${fmt(c.max_700_kmh)} km/h</td><td class="n">${fmt(c.max_10m_kmh)} km/h</td><td class="n">${fmt(c.mean_from_700_deg)}° (${compass(c.mean_from_700_deg)})</td><td class="n">${fmt(c.snowfall_cm,1)} cm</td></tr>`).join("")}
+      </tbody></table></div>
+      <p>So for three days, strong wind blew from the <b>${compass(hi.mean_from_700_deg)}</b> at ridge height while a few centimetres of snow fell. Snow moved by a ${compass(hi.mean_from_700_deg)} wind settles on slopes facing the other way, roughly <b>${compass((hi.mean_from_700_deg + 180) % 360)}</b>, wherever higher ground upwind shelters them.</p>`;
+  }
+  const P = D.exposure.points;
+  const lats = P.map(p => p.lat), lons = P.map(p => p.lon);
+  const midLat = (Math.min(...lats) + Math.max(...lats)) / 2, kx = Math.cos(midLat * Math.PI / 180);
+  const x0 = Math.min(...lons), x1 = Math.max(...lons), y0 = Math.min(...lats), y1 = Math.max(...lats);
+  const MW = 600, pad = 24, sc = (MW - 2 * pad) / ((x1 - x0) * kx), MH = (y1 - y0) * sc + 2 * pad;
+  const px = (p) => pad + (p.lon - x0) * kx * sc, py = (p) => pad + (y1 - p.lat) * sc;
+  const mix = (t) => { const a = css("--ramp-lo"), b = css("--ramp-hi"); const h = (c) => [1, 3, 5].map(i => parseInt(c.slice(i, i + 2), 16)); const A = h(a), B2 = h(b); return `rgb(${A.map((v, i) => Math.round(v + (B2[i] - v) * t)).join(",")})`; };
+  function drawMap() {
+    let s = `<svg viewBox="0 0 ${MW} ${MH}" role="group">`;
+    s += `<polyline fill="none" style="stroke:var(--line)" stroke-width="3" points="${P.map(p => `${px(p)},${py(p)}`).join(" ")}"></polyline>`;
+    P.forEach((p, i) => { s += `<circle tabindex="0" role="button" aria-label="Route point at km ${p.km}" data-i="${i}" cx="${px(p)}" cy="${py(p)}" r="${p.landform_class === "ridge" ? 6 : 5}" style="fill:${p.m1 == null ? css("--line") : mix(p.m1)}"></circle>`; });
+    s += `<text x="${MW - pad}" y="${MH - 6}" text-anchor="end">north up · ${P.length} route points · 250 m apart</text></svg>`;
+    $("#map").innerHTML = s;
+    $("#map").querySelectorAll("circle").forEach(c => {
+      c.addEventListener("click", () => select(+c.dataset.i));
+      c.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(+c.dataset.i); } });
+    });
+  }
+  function drawProfile() {
+    const PW = 680, PH = 170, L = 40, Bt = 24, kmMax = Math.max(...P.map(p => p.km));
+    const eMin = Math.min(...P.map(p => p.elev_m)), eMax = Math.max(...P.map(p => p.elev_m));
+    const X = (km) => L + (PW - L - 8) * km / kmMax, Y = (e) => PH - Bt - (PH - Bt - 10) * (e - eMin) / (eMax - eMin);
+    let s = `<svg viewBox="0 0 ${PW} ${PH}" role="img" aria-label="Elevation profile with index">`;
+    P.forEach(p => { const h = (PH - Bt - 10) * (p.m1 ?? 0); s += `<rect x="${X(p.km) - 2.5}" y="${PH - Bt - h}" width="5" height="${h}" style="fill:${mix(p.m1 ?? 0)}" opacity=".9"></rect>`; });
+    s += `<polyline fill="none" style="stroke:var(--ink)" stroke-width="1.6" points="${P.map(p => `${X(p.km)},${Y(p.elev_m)}`).join(" ")}"></polyline>`;
+    [eMin, eMax].forEach(e => { s += `<text x="${L - 4}" y="${Y(e) + 4}" text-anchor="end">${fmt(e)}</text>`; });
+    for (let k = 0; k <= kmMax; k += 5) s += `<text x="${X(k)}" y="${PH - 6}" text-anchor="middle">${k} km</text>`;
+    s += `</svg>`;
+    $("#profile").innerHTML = s;
+  }
+  function select(i) {
+    const p = P[i]; const det = p.m1_detail ? JSON.parse(p.m1_detail) : {};
+    $("#map").querySelectorAll("circle").forEach(c => c.classList.toggle("sel", +c.dataset.i === i));
+    const wind = W.length ? W[W.length - 1].mean_from_700_deg : null;
+    const downwind = wind == null ? null : (wind + 180) % 360;
+    const diff = (p.aspect == null || downwind == null) ? null : Math.abs(((p.aspect - downwind + 540) % 360) - 180);
+    const lee = diff != null && diff <= 45;
+    const shelter = det.loading > 0 && det.scour === 0 ? "sheltered: higher ground upwind blocks the wind, so blowing snow can drop here"
+      : det.scour > 0 && det.loading === 0 ? "exposed: nothing upwind is higher, so the wind hits it and tends to strip snow"
+      : det.scour > 0 ? "mixed: sheltered in some hours, exposed in others" : "no transport reached it";
+    const rank = p.m1 == null ? "no score" : `${fmt(p.m1, 2)} (higher than ${Math.round(p.m1 * 100)}% of the route)`;
+    $("#why-point").innerHTML = `<div class="sub">Route point at km ${fmt(p.km, 2)}</div>
+      <h3>Index ${rank}</h3>
+      <dl class="kv"><dt>Height (DEM)</dt><dd>${fmt(p.elev_m)} m</dd><dt>Landform</dt><dd>${esc((p.landform_class || "–").replace("_", " "))}</dd>
+        <dt>Slope faces</dt><dd>${p.aspect == null ? "flat" : `${fmt(p.aspect)}° (${compass(p.aspect)})`}, ${fmt(p.slope)}° steep</dd>
+        <dt>Loading / scour</dt><dd>${fmt(det.loading, 1)} / ${fmt(det.scour, 1)}</dd></dl>
+      <div class="sub">Why</div>
+      <ol class="because">
+        <li>Wind came from about ${compass(wind)}, so downwind is ${compass(downwind)}. This slope faces ${compass(p.aspect)}: ${diff == null ? "no aspect" : `${fmt(diff)}° from downwind`}, so the simple rule (B0) calls it <b>${lee ? "leeward" : "not leeward"}</b>.</li>
+        <li>From the terrain the point is <b>${shelter}</b>.</li>
+        <li>Wind at its height is mixed from the valley and ridge winds by how high it sits above the model's ground.</li>
+        <li>Its score is the sum over 72 hours of (wind strength above 25 km/h, to the 4th power) × (snow available) × (shelter), then ranked against the other ${P.length - 1} points.</li>
+      </ol>
+      <p class="chart-note">A rank within this route and window only. It says where blown snow would most likely collect if it moved, not whether a slope will avalanche.</p>`;
+  }
+  drawMap(); drawProfile();
+  select(P.reduce((b, p, i) => (p.m1 ?? -1) > (P[b].m1 ?? -1) ? i : b, 0));
+  matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", () => { drawMap(); drawProfile(); });
+
+  // ---- routes
+  const lf = ["ridge", "couloir_gully", "basin_valley", "steep_face", "open_slope"];
+  $("#routes-t").innerHTML = `<thead><tr><th>Route</th><th>Region</th><th class="n">km</th><th class="n">Gain</th><th class="n">Max (GPX)</th><th class="n">Points</th><th class="n">Weather cells</th>${lf.map(l => `<th class="n">${l.split("_")[0]}</th>`).join("")}</tr></thead><tbody>
+    ${D.routes.map(r => `<tr><td>${esc(r.name)}${r.committed_to_repo ? "" : ' <span class="tag">local only</span>'}</td><td>${esc(r.region_id.replace("_", " "))}</td>
+      <td class="n">${fmt(r.distance_m / 1000, 2)}</td><td class="n">+${fmt(r.gain_gpx_m)} m</td><td class="n">${fmt(r.max_ele_gpx_m)} m</td><td class="n">${r.route_points}</td>
+      <td class="n">${r.cells || "–"}</td>${lf.map(l => `<td class="n">${r.landforms[l] || 0}</td>`).join("")}</tr>`).join("")}</tbody>`;
+
+  // ---- decisions
+  function drawDecisions(q) {
+    q = (q || "").toLowerCase();
+    const groups = {};
+    D.decisions.filter(d => !q || (d.id + d.title + d.text + d.section).toLowerCase().includes(q)).forEach(d => (groups[d.section] ||= []).push(d));
+    const host = $("#declist"); host.innerHTML = "";
+    const keys = Object.keys(groups);
+    if (!keys.length) { host.innerHTML = `<p class="muted">No decision mentions "${esc(q)}".</p>`; return; }
+    keys.forEach(k => {
+      const g = el("div", { class: "decgroup" }, `<h3>${esc(k)}</h3>`);
+      groups[k].forEach(d => g.append(el("details", { class: "dec" }, `<summary><span class="id">${d.id}</span><span>${esc(d.title)}</span></summary><p>${esc(d.text).replace(/`([^`]+)`/g, "<code>$1</code>")}</p>`)));
+      host.append(g);
+    });
+  }
+  drawDecisions("");
+  $("#decq").addEventListener("input", (e) => drawDecisions(e.target.value));
+})();
+</script>
